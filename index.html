@@ -1,0 +1,4105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedClaim & Koding Klinis — RSUD Kepulauan Seribu</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #0f766e;
+      --primary-soft: #f0fdfa;
+      --accent: #0284c7;
+      --accent-soft: #e0f2fe;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+      --warn-text: #92400e;
+      --danger-bg: #fef2f2;
+      --danger-border: #dc2626;
+      --danger-text: #991b1b;
+      --ok-bg: #f0fdf4;
+      --ok-border: #16a34a;
+      --ok-text: #166534;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #0f766e 100%);
+      color: #fff;
+      padding: 18px 24px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.15);
+    }
+
+    .header-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .header-center {
+      text-align: center;
+    }
+
+    .header-logo {
+      height: 52px;
+      width: auto;
+      max-width: 140px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 5px 9px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+    }
+
+    @media (max-width: 760px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .header-logo {
+        height: 46px;
+      }
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 4px 0 0;
+      font-size: 0.875rem;
+      color: #ccfbf1;
+    }
+
+    .container {
+      max-width: 1360px;
+      margin: 20px auto;
+      padding: 0 20px 40px;
+    }
+
+    .toolbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      flex: 1 1 240px;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+
+    select, button, input[type="number"], input[type="password"] {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.88rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    button {
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    button:disabled, input:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    button.btn-primary:hover { background: #115e59; }
+
+    button.btn-secondary-role {
+      background: var(--accent-soft);
+      color: #0369a1;
+      border: 1px solid #38bdf8;
+      font-weight: 600;
+    }
+
+    button.btn-secondary-role:hover {
+      background: #bae6fd;
+    }
+
+    button.btn-accent {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    button.btn-accent:hover:not(:disabled) { background: #0369a1; }
+
+    button.btn-lock {
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fdba74;
+      font-weight: 600;
+    }
+
+    button.btn-lock:hover { background: #ffedd5; }
+
+    button.btn-save {
+      background: #15803d;
+      color: #fff;
+      border-color: #15803d;
+      font-weight: 600;
+    }
+
+    button.btn-save:hover { background: #166534; }
+
+    button.btn-download {
+      background: #1e293b;
+      color: #fff;
+      border-color: #1e293b;
+      font-weight: 600;
+    }
+
+    button.btn-download:hover { background: #0f172a; }
+
+    button.btn-reset-soft {
+      background: #fff;
+      color: #b91c1c;
+      border-color: #fca5a5;
+      font-weight: 600;
+    }
+
+    button.btn-reset-soft:hover { background: #fef2f2; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #1e293b;
+      flex-shrink: 0;
+      text-align: center;
+      max-width: 240px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    /* Mode Peringatan Merah Penuh untuk Diagnosis Dikecualikan */
+    .panel.panel-excluded {
+      background: #fef2f2;
+      border: 2px solid #dc2626;
+      color: #991b1b;
+    }
+
+    .panel.panel-excluded .badge {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #f87171;
+    }
+
+    .panel.panel-excluded h2,
+    .panel.panel-excluded h4,
+    .panel.panel-excluded strong,
+    .panel.panel-excluded .excluded-muted,
+    .panel.panel-excluded .excluded-proc-line,
+    .panel.panel-excluded .role-feedback {
+      color: #991b1b;
+    }
+
+    .panel.panel-excluded .sub-card {
+      background: #fff5f5;
+      border: 1.5px solid #ef4444;
+    }
+
+    .panel.panel-excluded .icd-code-btn {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #f87171;
+    }
+
+    .panel.panel-excluded .icd-code-btn.active {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #991b1b;
+    }
+
+    .panel.panel-excluded input[type="number"],
+    .panel.panel-excluded input[type="password"] {
+      background: #ffffff;
+      border: 1.5px solid #dc2626;
+      color: #991b1b;
+      font-weight: 600;
+    }
+
+    .panel.panel-excluded button.btn-accent {
+      background: #dc2626;
+      border-color: #b91c1c;
+      color: #ffffff;
+    }
+
+    .panel.panel-excluded button.btn-accent:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    .panel.panel-excluded .action-bar {
+      border-top: 1px dashed #f87171;
+    }
+
+    .panel.panel-excluded button.btn-save {
+      background: #b91c1c;
+      border-color: #991b1b;
+      color: #ffffff;
+    }
+
+    .panel.panel-excluded button.btn-save:hover {
+      background: #991b1b;
+    }
+
+    .panel.panel-excluded button.btn-download {
+      background: #7f1d1d;
+      border-color: #7f1d1d;
+      color: #ffffff;
+    }
+
+    .panel.panel-excluded button.btn-download:hover {
+      background: #450a0a;
+    }
+
+    .panel.panel-excluded button.btn-reset-soft {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #dc2626;
+    }
+
+    .panel.panel-excluded button.btn-reset-soft:hover {
+      background: #fecaca;
+    }
+
+    .alert {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 0.88rem;
+    }
+
+    .alert-danger {
+      background: #fee2e2;
+      border: 2px solid var(--danger-border);
+      color: var(--danger-text);
+      font-weight: 700;
+    }
+
+    .alert-warn {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      color: var(--warn-text);
+    }
+
+    .alert-ok {
+      background: var(--ok-bg);
+      border: 1px solid var(--ok-border);
+      color: var(--ok-text);
+    }
+
+    .calc-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .calc-box h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    .sub-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    .sub-card h4 {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .tariff-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .lock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .lock-pill.locked {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+
+    .lock-pill.unlocked {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .unlock-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .lock-msg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 6px;
+      min-height: 1.2em;
+    }
+
+    .osce-comp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    .osce-comp-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .osce-comp-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .osce-comp-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .osce-comp-points {
+      font-size: 0.78rem;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .osce-rubric-note {
+      font-size: 0.76rem;
+      color: #334155;
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 9px;
+    }
+
+    .viral-criteria-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .viral-chk-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      color: #0f172a;
+      cursor: pointer;
+    }
+
+    .viral-chk-card.sub-indent {
+      margin-left: 18px;
+      background: #f8fafc;
+    }
+
+    @media (max-width: 600px) {
+      .viral-chk-card.sub-indent {
+        margin-left: 10px;
+      }
+    }
+
+    .viral-chk-card input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .viral-chk-card:has(input:checked) {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: #115e59;
+    }
+
+    .ppok-xray-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin: 8px 0 10px;
+      font-size: 0.88rem;
+      color: #0f172a;
+      cursor: pointer;
+    }
+
+    .ppok-xray-strip input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .ppok-xray-strip:has(input:checked) {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: #115e59;
+    }
+
+    .puqe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    .puqe-field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .puqe-field select {
+      width: 100%;
+    }
+
+    .icd-code-btn {
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+    }
+
+    .icd-code-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .icd-code-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .check-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    .check-label:has(input:checked) {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: #115e59;
+      font-weight: 600;
+    }
+
+    .score-pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    /* Slide 11 — Ulkus DM & Luka Pasca Operasi */
+    .slide11-wrap {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 5px solid #0284c7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .slide11-tag {
+      display: inline-block;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .slide11-title {
+      margin: 6px 0 14px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .slide11-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .slide11-card-blue {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .slide11-card-green {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .slide11-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .slide11-chk-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 7px 10px;
+      margin-bottom: 7px;
+      font-size: 0.83rem;
+      color: #1e293b;
+      cursor: pointer;
+    }
+
+    .slide11-chk-row:has(input:checked) {
+      background: #dbeafe;
+      border-color: #0284c7;
+      font-weight: 600;
+    }
+
+    .slide11-code-box {
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      color: #0f172a;
+      margin-top: 8px;
+    }
+
+    .slide11-code-pill {
+      display: inline-block;
+      background: #0284c7;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+      margin-bottom: 4px;
+    }
+
+    .slide11-strip {
+      display: block;
+      background: #ffffff;
+      border: 1px solid #d1fae5;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 0.83rem;
+      cursor: pointer;
+    }
+
+    .slide11-strip:has(input:checked) {
+      background: #d1fae5;
+      border-color: #059669;
+    }
+
+    .slide11-strip-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .slide11-strip-head {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .pill-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .pill-blue { background: #dbeafe; color: #1d4ed8; }
+    .pill-teal { background: #ccfbf1; color: #0f766e; }
+    .pill-amber { background: #fef3c7; color: #b45309; }
+
+    .slide11-strip-sub {
+      font-size: 0.78rem;
+      color: #475569;
+      margin-top: 3px;
+    }
+
+    .slide11-phases {
+      background: #d1fae5;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .slide11-phases-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 6px;
+    }
+
+    .slide11-phases-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .phase-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      color: #047857;
+      border: 1px solid #6ee7b7;
+      padding: 3px 9px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .phase-chip:has(input:checked) {
+      background: #059669;
+      color: #ffffff;
+      border-color: #059669;
+    }
+
+    .slide11-footer {
+      background: #d1fae5;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #064e3b;
+    }
+
+    .slide11-summary {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+
+    /* Tindakan Dijamin BPJS — Soft Tissue Tumor */
+    .bpjs-tindakan-wrap {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 5px solid #16a34a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .bpjs-tag {
+      display: inline-block;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .bpjs-title {
+      margin: 6px 0 14px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .bpjs-card-stt {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .bpjs-card-title {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e3a8a;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 7px;
+      margin-bottom: 4px;
+    }
+
+    .bpjs-sub {
+      font-size: 0.78rem;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    .bpjs-sec-label {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #0f172a;
+      border-left: 3px solid #0284c7;
+      padding-left: 7px;
+      margin: 12px 0 6px;
+    }
+
+    .bpjs-chk {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      padding: 6px 9px;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+      color: #1e293b;
+      cursor: pointer;
+    }
+
+    .bpjs-chk:has(input:checked) {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      font-weight: 600;
+    }
+
+    .bpjs-out-note {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      margin-top: 2px;
+    }
+
+    .bpjs-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .bpjs-mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .bpjs-mini-chip:has(input:checked) {
+      background: #dbeafe;
+      border-color: #0284c7;
+      color: #0f172a;
+    }
+
+    .bpjs-koding-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.82rem;
+    }
+
+    .bpjs-koding-badge {
+      background: #dbeafe;
+      color: #1e3a8a;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid #93c5fd;
+    }
+
+    .tariff-editor-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .role-feedback {
+      font-size: 0.82rem;
+      color: #0369a1;
+      font-weight: 600;
+      margin-top: 8px;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <img src="jayaraya.png" alt="Logo Jaya Raya" class="header-logo" onerror="this.style.display='none'" />
+      <div class="header-center">
+        <h1>MedClaim &amp; Koding Klinis — RSUD Kepulauan Seribu</h1>
+        <p>Referensi Diagnosis, ICD-10, ICD-9-CM, Tarif E-Klaim BPJS &amp; Kalkulator Kriteria Klinis Interaktif</p>
+      </div>
+      <img src="jaksehat.png" alt="Logo JakSehat" class="header-logo" onerror="this.style.display='none'" />
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="toolbar">
+      <input id="searchInput" class="search-input" type="text" placeholder="Cari diagnosis, kode ICD-10 (J18.9, A01.0, J44.9...), atau tindakan ICD-9 (83.39, 90.59)..." />
+      <select id="categoryFilter">
+        <option value="ALL">Semua Kategori</option>
+        <option value="Infeksi & Tropis">Infeksi &amp; Tropis</option>
+        <option value="Respirasi">Respirasi</option>
+        <option value="Kardiovaskular">Kardiovaskular</option>
+        <option value="Ginjal & Saluran Kemih">Ginjal &amp; Saluran Kemih</option>
+        <option value="Gastrointestinal & Hepatobilier">Gastrointestinal &amp; Hepatobilier</option>
+        <option value="Neurologi">Neurologi</option>
+        <option value="Endokrin, Metabolik & Elektrolit">Endokrin, Metabolik &amp; Elektrolit</option>
+        <option value="Obstetri & Luka">Obstetri &amp; Luka</option>
+      </select>
+      <select id="diagQuickSelect" title="Pilih Diagnosis Aktif">
+        <option value="">-diagnosa-</option>
+      </select>
+      <select id="eclaimClassSelect" title="Kelas Rawat / Kelompok Tarif E-Klaim">
+        <option value="">- pilih -</option>
+        <option value="1.0">Tarif E-Klaim / Kelas 3 (100%)</option>
+        <option value="1.15">Kelas 2 / Modifikasi (+15%)</option>
+        <option value="1.3">Kelas 1 / Modifikasi (+30%)</option>
+        <option value="0.35">Rawat Jalan / RJTL (35%)</option>
+      </select>
+      <button class="btn-primary" id="resetFilterBtn" type="button">Reset Filter</button>
+    </div>
+
+    <div class="panel" id="detailPanel"></div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "medclaim_rsud_kep_seribu_v1";
+    const TARIFF_UNLOCK_PASS = "dadang";
+
+    let isTariffUnlocked = false;
+    let tariffLockMsgText = "Penyesuaian Tarif Dasar E-Klaim terkunci. Masukkan password untuk membuka kunci.";
+    let tariffLockIsError = false;
+
+    // Tabel Tarif E-Klaim / INACBG (TARIF RS KELAS D PEMERINTAH)
+    const ECLAIM_TARIFF_MAP = {
+      bacterial_inf: 2202700,
+      viral_inf: 1628700,
+      dengue: 1628700,
+      typhoid: 2202700,
+      malaria: 2202700,
+      campak: 1628700,
+      pneumonia: 3332600,
+      bp: 3332600,
+      alo: 2661000,
+      tb_paru: 3999800,
+      uri_unspec: 2661000,
+      bronkitis: 2661000,
+      bronkiektasis: 2767100,
+      ppok: 2767100,
+      asma: 2053100,
+      gagal_napas: 7191000,
+      sepsis: 3332600,
+      stemi_nstemi: 2941800,
+      aritmia: 2669700,
+      chest_pain: 3058000,
+      chf_excluded: 0,
+      isk: 2144100,
+      ckd: 2144100,
+      ht_kidney: 2144100,
+      bph: 2144100,
+      gea: 1227400,
+      gastroenteritis_noninf: 1227400,
+      disentri: 1141300,
+      abd_pain: 1227400,
+      colic_renal: 3281000,
+      kolesistitis: 2864000,
+      kolelitiasis: 2864000,
+      masld: 2864000,
+      stroke: 3418600,
+      kejang_demam: 2525400,
+      epilepsi: 2525400,
+      paralytic_syndrome: 2718200,
+      dm: 3331000,
+      ht: 1934500,
+      dm_ht: 3331000,
+      kad: 3331000,
+      hhs: 3331000,
+      hipoglikemia: 3331000,
+      hipokalemia: 2648800,
+      hiponatremia: 2648800,
+      elektrolit_imbalance: 2648800,
+      normal_labour: 2009700,
+      heg: 2007700,
+      isk_hamil: 2007700,
+      anemia_hamil: 2007700,
+      ulcus_luka_postop: 2007700,
+      stt_d21_0: 2880700,
+      stt_d21_1: 2880700,
+      stt_d21_2: 2880700,
+      stt_d21_3: 2880700,
+      stt_d21_4: 2880700,
+      stt_d21_5: 2880700,
+      stt_d21_6: 2880700,
+      stt_d21_9: 2880700,
+      stt_d17: 2880700,
+      stt_d48_1: 2880700,
+      stt_c49: 2880700
+    };
+
+    const ICD10_OPTIONS_BY_DIAG = {
+      bacterial_inf: [
+        { code: "A49.9", label: "Bacterial infection, unspecified" },
+        { code: "A49.0", label: "Staphylococcal infection, unspecified site" },
+        { code: "A49.8", label: "Other bacterial infections of unspecified site" }
+      ],
+      viral_inf: [
+        { code: "B34.9", label: "Viral infection, unspecified" },
+        { code: "B34.8", label: "Other viral infections of unspecified site" }
+      ],
+      dengue: [
+        { code: "A90", label: "Dengue Fever (DD)" },
+        { code: "A91.9", label: "Dengue Haemorrhagic Fever (DBD I–II)" },
+        { code: "A91.0", label: "Dengue Shock Syndrome (DSS / DBD III–IV)" }
+      ],
+      typhoid: [
+        { code: "A01.0", label: "Typhoid fever (Demam Tifoid)" },
+        { code: "A01.1", label: "Paratyphoid fever A" },
+        { code: "A01.4", label: "Paratyphoid fever, unspecified" }
+      ],
+      malaria: [
+        { code: "B50.9", label: "Plasmodium falciparum malaria, unspecified" },
+        { code: "B51.9", label: "Plasmodium vivax malaria without complication" },
+        { code: "B54", label: "Unspecified malaria" }
+      ],
+      campak: [
+        { code: "B05.9", label: "Measles without complication" },
+        { code: "B05.2† -> J17.1*", label: "Measles complicated by pneumonia (Anak)" },
+        { code: "B05.8", label: "Measles with other complications" }
+      ],
+      pneumonia: [
+        { code: "J18.9", label: "Pneumonia" },
+        { code: "J44.0", label: "Pneumonia + PPOK" },
+        { code: "J44.1 + J18.9", label: "PPOK eksaserbasi + Pneumonia" }
+      ],
+      bp: [
+        { code: "J18.0", label: "Bronchopneumonia, unspecified" },
+        { code: "J18.9", label: "Pneumonia, unspecified" }
+      ],
+      alo: [
+        { code: "J81", label: "Pulmonary oedema" },
+        { code: "I50.1", label: "Left ventricular failure" }
+      ],
+      tb_paru: [
+        { code: "A15.3", label: "Tuberculosis of lung, confirmed by unspecified means" },
+        { code: "A15.0", label: "Tuberculosis of lung, confirmed by sputum microscopy" },
+        { code: "A16.2", label: "Tuberculosis of lung, without mention of bacteriological/histological confirmation" }
+      ],
+      uri_unspec: [
+        { code: "J22", label: "Unspecified acute lower respiratory infection" },
+        { code: "J06.9", label: "Acute upper respiratory infection, unspecified" }
+      ],
+      bronkitis: [
+        { code: "J40", label: "Bronchitis, not specified as acute or chronic" },
+        { code: "J20.9", label: "Acute bronchitis, unspecified" }
+      ],
+      bronkiektasis: [
+        { code: "J42", label: "Unspecified chronic bronchitis" },
+        { code: "J47", label: "Bronchiectasis" }
+      ],
+      ppok: [
+        { code: "J44.9", label: "Chronic obstructive pulmonary disease, unspecified" },
+        { code: "J44.1", label: "COPD with acute exacerbation, unspecified" },
+        { code: "J44.0", label: "COPD with acute lower respiratory infection" }
+      ],
+      asma: [
+        { code: "J45.9", label: "Asthma, unspecified" },
+        { code: "J46", label: "Status asthmaticus" }
+      ],
+      gagal_napas: [
+        { code: "J96.0", label: "Acute respiratory failure" },
+        { code: "J96.9", label: "Respiratory failure, unspecified" },
+        { code: "J96.1", label: "Chronic respiratory failure" }
+      ],
+      sepsis: [
+        { code: "A41.9", label: "Sepsis, unspecified" },
+        { code: "A41.9 + R57.2", label: "Septic shock (Syok Septik)" },
+        { code: "A41.9 + R57.1", label: "Sepsis + Hypovolaemic shock" },
+        { code: "A40.3", label: "Sepsis due to Streptococcus pneumoniae" }
+      ],
+      stemi_nstemi: [
+        { code: "I21.4", label: "Acute subendocardial myocardial infarction (NSTEMI)" },
+        { code: "I21.9", label: "Acute myocardial infarction, unspecified (STEMI/AMI)" }
+      ],
+      aritmia: [
+        { code: "I47.1", label: "Supraventricular tachycardia (SVT)" },
+        { code: "I48.9", label: "Atrial fibrillation and atrial flutter, unspecified (AF)" },
+        { code: "I49.9", label: "Cardiac arrhythmia, unspecified" }
+      ],
+      chest_pain: [
+        { code: "R07.4", label: "Chest pain, unspecified" },
+        { code: "R07.2", label: "Precordial pain" }
+      ],
+      chf_excluded: [
+        { code: "I50.0", label: "Congestive heart failure (Dikecualikan)" }
+      ],
+      isk: [
+        { code: "N30.0", label: "Acute cystitis" },
+        { code: "N39.0", label: "Urinary tract infection, site not specified" },
+        { code: "N10", label: "Acute tubulo-interstitial nephritis (Pielonefritis akut)" }
+      ],
+      ckd: [
+        { code: "N18.9", label: "Chronic kidney disease, unspecified" },
+        { code: "N18.5", label: "Chronic kidney disease, stage 5" }
+      ],
+      ht_kidney: [
+        { code: "I12.9", label: "Hypertensive renal disease without renal failure" },
+        { code: "I12.0", label: "Hypertensive renal disease with renal failure" }
+      ],
+      bph: [
+        { code: "N40", label: "Hyperplasia of prostate (BPH)" }
+      ],
+      gea: [
+        { code: "A09", label: "Diarrhoea and gastroenteritis of presumed infectious origin" },
+        { code: "K52.9", label: "Noninfective gastroenteritis and colitis, unspecified" },
+        { code: "A00–A08", label: "Organisme infeksius spesifik" }
+      ],
+      gastroenteritis_noninf: [
+        { code: "K52.9", label: "Noninfective gastroenteritis and colitis, unspecified" },
+        { code: "K2.9", label: "Kode catatan klinis (K2.9)" }
+      ],
+      disentri: [
+        { code: "A03.9", label: "Shigellosis, unspecified" },
+        { code: "A06.0", label: "Acute amoebic dysentery" }
+      ],
+      abd_pain: [
+        { code: "R10.4", label: "Other and unspecified abdominal pain" },
+        { code: "R10.0", label: "Acute abdomen" }
+      ],
+      colic_renal: [
+        { code: "N23", label: "Unspecified renal colic" }
+      ],
+      kolesistitis: [
+        { code: "K81.9", label: "Cholecystitis, unspecified" },
+        { code: "K81.0", label: "Acute cholecystitis" }
+      ],
+      kolelitiasis: [
+        { code: "K80.2", label: "Calculus of gallbladder without cholecystitis" },
+        { code: "K80.0", label: "Calculus of gallbladder with acute cholecystitis" }
+      ],
+      masld: [
+        { code: "K76.0", label: "Fatty (change of) liver, not elsewhere classified (MASLD)" },
+        { code: "K75.8", label: "Other specified inflammatory liver diseases (NASH/MASH)" }
+      ],
+      stroke: [
+        { code: "I63.9", label: "Cerebral infarction, unspecified" },
+        { code: "I64", label: "Stroke, not specified as haemorrhage or infarction" }
+      ],
+      kejang_demam: [
+        { code: "R56.0", label: "Febrile convulsions (Kejang Demam)" }
+      ],
+      epilepsi: [
+        { code: "G40.9", label: "Epilepsy, unspecified" },
+        { code: "G41.9", label: "Status epilepticus, unspecified" }
+      ],
+      paralytic_syndrome: [
+        { code: "G83.9", label: "Paralytic syndrome, unspecified" },
+        { code: "G81.9", label: "Hemiplegia, unspecified" }
+      ],
+      dm: [
+        { code: "E11.9", label: "Type 2 diabetes mellitus without complications" },
+        { code: "E11.6", label: "Type 2 diabetes mellitus with other specified complications" }
+      ],
+      ht: [
+        { code: "I10", label: "Essential (primary) hypertension" },
+        { code: "I11.9", label: "Hypertensive heart disease without (congestive) heart failure" }
+      ],
+      dm_ht: [
+        { code: "E11.9 & I10", label: "DM Tipe 2 + Hipertensi Esensial" }
+      ],
+      kad: [
+        { code: "E11.10", label: "Type 2 DM with ketoacidosis without coma" },
+        { code: "E10.10", label: "Type 1 DM with ketoacidosis without coma" }
+      ],
+      hhs: [
+        { code: "E11.00", label: "Type 2 DM with hyperosmolarity without coma" },
+        { code: "E11.01", label: "Type 2 DM with hyperosmolarity with coma" }
+      ],
+      hipoglikemia: [
+        { code: "E16.2", label: "Hypoglycaemia, unspecified" },
+        { code: "E16.1", label: "Other hypoglycaemia" }
+      ],
+      hipokalemia: [
+        { code: "E87.6", label: "Hypokalaemia" }
+      ],
+      hiponatremia: [
+        { code: "E87.1", label: "Hypo-osmolality and hyponatraemia" }
+      ],
+      elektrolit_imbalance: [
+        { code: "E87.8", label: "Other disorders of electrolyte and fluid balance, nec" },
+        { code: "E87.6", label: "Hypokalaemia" },
+        { code: "E87.1", label: "Hyponatraemia" }
+      ],
+      normal_labour: [
+        { code: "O80, Z37.0", label: "Single spontaneous delivery + Liveborn infant" },
+        { code: "O80.0", label: "Spontaneous vertex delivery" }
+      ],
+      heg: [
+        { code: "O21.0", label: "Mild hyperemesis gravidarum" },
+        { code: "O21.1", label: "Hyperemesis gravidarum with metabolic disturbance" },
+        { code: "O21.9", label: "Vomiting of pregnancy, unspecified" }
+      ],
+      isk_hamil: [
+        { code: "O23.4", label: "Unspecified infection of urinary tract in pregnancy" },
+        { code: "O23.1", label: "Infections of kidney in pregnancy" }
+      ],
+      anemia_hamil: [
+        { code: "O99.0", label: "Anaemia complicating pregnancy, childbirth and the puerperium" }
+      ],
+      ulcus_luka_postop: [
+        { code: "E11.5", label: "Type 2 DM with peripheral circulatory complications (Ulkus DM)" },
+        { code: "T81.4", label: "Infection following a procedure (ILO)" },
+        { code: "Z48.8", label: "Other specified surgical follow-up care" },
+        { code: "O86.0", label: "Infection of obstetric surgical wound" }
+      ]
+    };
+
+    function createSttEntry(id, name, icd10, locationNote) {
+      return {
+        id,
+        name,
+        icd10,
+        procedures: "Eksisi STT dengan narkose umum (83.39) | Group INACBG: M-4-21-I (Rawat Inap Kelas 3, Tarif RS Kelas D Pemerintah)",
+        claim: ECLAIM_TARIFF_MAP[id] ?? 2880700,
+        category: "Obstetri & Luka",
+        module: "soft_tissue_tumor",
+        note: `Tindakan Dijamin BPJS — Soft Tissue Tumor (${locationNote}). Group INACBG M-4-21-I (Rawat Inap Kelas 3 / 3 Hari, Tarif RS Kelas D Pemerintah) = Rp 2.880.700.`
+      };
+    }
+
+    const DIAGNOSES = [
+      {
+        id: "bacterial_inf",
+        name: "Bacterial infection, unspecified",
+        icd10: "A49.9",
+        procedures: "Injection of antibiotic (99.21), darah rutin/CRP/prokalsitonin & kultur/mikrobiologi sesuai indikasi",
+        claim: ECLAIM_TARIFF_MAP.bacterial_inf,
+        category: "Infeksi & Tropis",
+        module: "bacterial_inf",
+        note: "Infeksi akut akibat patogen bakteri (Gram-positif atau Gram-negatif) dengan manifestasi sistemik maupun lokal saat fokus infeksi primer atau hasil kultur spesifik belum teridentifikasi; evaluasi penanda inflamasi (leukositosis dominasi neutrofil / shift to the left, CRP, prokalsitonin) dan pemberian antibiotik empiris spektrum luas atau sesuai pola kuman lokal sambil menunggu hasil mikrobiologi/kultur."
+      },
+      {
+        id: "viral_inf",
+        name: "Viral infection, unspecified",
+        icd10: "B34.9",
+        procedures: "Darah rutin / rapid test / PCR / serologi sesuai indikasi",
+        claim: ECLAIM_TARIFF_MAP.viral_inf,
+        category: "Infeksi & Tropis",
+        module: "viral_inf",
+        note: "Ceklist Kriteria Klinis & Pemeriksaan: gejala sistemik umum (prodromal), tidak ada lokalisasi organ dominan, hasil lab darah mendukung virus (opsional), dan hasil tes spesifik negatif/belum tersedia."
+      },
+      {
+        id: "dengue",
+        name: "Dengue Fever / DHF / DSS",
+        icd10: "A90 / A91.9 / A91.0",
+        procedures: "NS1/IgG IgM dengue",
+        claim: ECLAIM_TARIFF_MAP.dengue,
+        category: "Infeksi & Tropis",
+        module: "dengue",
+        note: "Regulasi: KMK No. HK.01.07/MENKES/9845/2020 (dewasa) & KMK No. HK.01.07/MENKES/4636/2021 (anak). Skor vital sign + hari demam WAJIB dicatat."
+      },
+      {
+        id: "typhoid",
+        name: "Demam Tifoid (Typhoid fever)",
+        icd10: "A01.0",
+        procedures: "Widal / Tubex / Typhidot / Kultur Salmonella",
+        claim: ECLAIM_TARIFF_MAP.typhoid,
+        category: "Infeksi & Tropis",
+        module: "typhoid",
+        note: "Skor Nelwan >= 13 mengarah ke Diagnosis Tifoid (wajib tertera di resume medis). Temuan TKMKB Nov 2025: hari rawat <= 3 hari dengan kondisi sehat = terapi tidak adekuat."
+      },
+      {
+        id: "malaria",
+        name: "Malaria",
+        icd10: "B50.9 / B51.9",
+        procedures: "Mikroskopis sediaan darah tebal & tipis / RDT malaria (< 24 jam)",
+        claim: ECLAIM_TARIFF_MAP.malaria,
+        category: "Infeksi & Tropis",
+        module: "malaria",
+        note: "Ceklist penegakan diagnosis (gejala klinis utama, riwayat epidemiologis, pemeriksaan fisik, konfirmasi laboratorium wajib) & ceklist kriteria malaria berat (tanda bahaya klinis & laboratorium) pada P. falciparum, P. vivax, atau P. knowlesi."
+      },
+      {
+        id: "campak",
+        name: "Campak (Measles)",
+        icd10: "B05.9 (atau B05.2† -> J17.1* pada pneumonia anak)",
+        procedures: "Isolasi non-AC sentral, Simptomatik + Vitamin A",
+        claim: ECLAIM_TARIFF_MAP.campak,
+        category: "Infeksi & Tropis",
+        module: "campak",
+        note: "Regulasi: TKMKB April 2026. Mulai Mei 2026 wajib lampirkan Form SARS (SE Kemenkes No. HK.02.02/C/1838/2026)."
+      },
+      {
+        id: "pneumonia",
+        name: "Pneumonia",
+        icd10: "J18.9",
+        procedures: "Ro toraks (87.44), antibiotik, +/- nebu",
+        claim: ECLAIM_TARIFF_MAP.pneumonia,
+        category: "Respirasi",
+        module: "pneumonia",
+        note: "KMK No. HK.02.02/MENKES/514/2015. Foto toraks infiltrat baru/progresif + >=2 gejala klinis. Lama rawat >3 hari (antibiotik IV >=72 jam sebelum oral). Temuan VPK: LOS <=3 hari = terapi tidak adekuat."
+      },
+      {
+        id: "bp",
+        name: "Bronkopneumonia (BP)",
+        icd10: "J18.0",
+        procedures: "Ro toraks (87.44), antibiotik, Other oxygen enrichment (93.96)",
+        claim: ECLAIM_TARIFF_MAP.bp,
+        category: "Respirasi",
+        note: "Catat kebutuhan oksigenasi (93.96) dan temuan radiologis/klinis."
+      },
+      {
+        id: "alo",
+        name: "Pulmonary oedema / ALO",
+        icd10: "J81",
+        procedures: "Tatalaksana edema paru akut",
+        claim: ECLAIM_TARIFF_MAP.alo,
+        category: "Respirasi",
+        note: "Evaluasi kondisi kardiopulmonal dan respons terapi."
+      },
+      {
+        id: "tb_paru",
+        name: "TB Paru",
+        icd10: "A15.3",
+        procedures: "TCM / BTA mikroskopis sputum, Foto toraks (87.44), Regimen OAT & pemantauan PMO",
+        claim: ECLAIM_TARIFF_MAP.tb_paru,
+        category: "Respirasi",
+        module: "tb_paru",
+        note: "Kriteria diagnosa TB Paru (klinis, pemeriksaan fisik toraks, bakteriologis TCM/BTA, radiologis foto toraks) & ringkasan checklist penilaian OSCE standar nasional UKMPPD (skala skor 0–3 per kompetensi, total 0–15)."
+      },
+      {
+        id: "uri_unspec",
+        name: "Unspecified acute lower respiratory infection",
+        icd10: "J22",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.uri_unspec,
+        category: "Respirasi",
+        note: "Gunakan kode spesifik bila etiologi/diagnosis spesifik sudah ditegakkan."
+      },
+      {
+        id: "bronkitis",
+        name: "Bronkitis",
+        icd10: "J40",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.bronkitis,
+        category: "Respirasi",
+        note: "Sesuaikan dengan catatan klinis dokter penanggung jawab."
+      },
+      {
+        id: "bronkiektasis",
+        name: "Bronkiektasis",
+        icd10: "J42",
+        procedures: "Foto toraks, spirometri",
+        claim: ECLAIM_TARIFF_MAP.bronkiektasis,
+        category: "Respirasi",
+        note: "Cantumkan hasil pemeriksaan penunjang terkait."
+      },
+      {
+        id: "ppok",
+        name: "PPOK",
+        icd10: "J44.9",
+        procedures: "Spirometri pasca-bronkodilator, bronkodilator / oksigenasi sesuai indikasi",
+        claim: ECLAIM_TARIFF_MAP.ppok,
+        category: "Respirasi",
+        module: "ppok",
+        note: "Kriteria utama PPOK: spirometri pasca-bronkodilator FEV1/FVC < 0,70 (atau < 70%) yang menunjukkan hambatan aliran udara menetap, disertai gejala pernapasan kronis, riwayat faktor risiko, dan klasifikasi derajat keparahan GOLD (GOLD 1–4)."
+      },
+      {
+        id: "asma",
+        name: "Asma",
+        icd10: "J45",
+        procedures: "Nebulisasi SABA/antikolinergik, PEF/spirometri, Foto toraks, Darah rutin/AGD & terapi serangan asma",
+        claim: ECLAIM_TARIFF_MAP.asma,
+        category: "Respirasi",
+        module: "asma",
+        note: "Kelayakan rawat inap asma: anamnesis & pemeriksaan fisik (sesak progresif, batuk, riwayat asma, RR > 25–30x/menit, takikardia, retraksi dinding dada, penggunaan otot bantu napas, wheezing), status oksigenasi & respons terapi IGD (SpO2 < 90–92% udara ruang, respons inkomplit pasca-nebulisasi SABA/antikolinergik berulang 1–3 jam), serta pemeriksaan penunjang (PEF/spirometri < 50% prediksi, foto toraks, darah rutin/AGD untuk status asthmaticus/gagal napas)."
+      },
+      {
+        id: "gagal_napas",
+        name: "Gagal napas",
+        icd10: "J96.0 / J96.9",
+        procedures: "Ventilator (96.71), monitor (96.71)",
+        claim: ECLAIM_TARIFF_MAP.gagal_napas,
+        category: "Respirasi",
+        note: "Wajib dilengkapi dokumentasi pemasangan ventilator/monitor (96.71) dan analisis gas darah/klinis."
+      },
+      {
+        id: "sepsis",
+        name: "Sepsis / Sepsis Berat / Syok Septik",
+        icd10: "A41.9 / A41.9 + R57.2 / A41.9 + R57.1 / A40.3",
+        procedures: "Kultur darah, Antibiotik <1 jam, Resusitasi cairan, MAP >=65 mmHg",
+        claim: ECLAIM_TARIFF_MAP.sepsis,
+        category: "Infeksi & Tropis",
+        module: "sepsis",
+        note: "Infeksi + >= 2 kriteria SIRS. Gunakan kode spesifik sesuai organisme/syok bila diketahui."
+      },
+      {
+        id: "stemi_nstemi",
+        name: "STEMI / NSTEMI",
+        icd10: "I21",
+        procedures: "Microscopic blood (90.59), Electrolytes (99.18), EKG (89.52)",
+        claim: ECLAIM_TARIFF_MAP.stemi_nstemi,
+        category: "Kardiovaskular",
+        note: "Lampirkan rekaman EKG (89.52) dan hasil laboratorium pendukung."
+      },
+      {
+        id: "aritmia",
+        name: "Aritmia (SVT/VT/afib/AF)",
+        icd10: "I47, I48",
+        procedures: "EKG / pemantauan irama jantung",
+        claim: ECLAIM_TARIFF_MAP.aritmia,
+        category: "Kardiovaskular",
+        note: "Sesuaikan kode I47 atau I48 dengan jenis aritmia pada EKG."
+      },
+      {
+        id: "chest_pain",
+        name: "Chest pain, unspecified",
+        icd10: "R07.4",
+        procedures: "Evaluasi nyeri dada",
+        claim: ECLAIM_TARIFF_MAP.chest_pain,
+        category: "Kardiovaskular",
+        note: "Gunakan bila penyebab spesifik nyeri dada belum terkonfirmasi."
+      },
+      {
+        id: "chf_excluded",
+        name: "CHF (Congestive Heart Failure)",
+        icd10: "I50.0",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.chf_excluded,
+        category: "Kardiovaskular",
+        excluded: true,
+        note: "TIDAK TERMASUK KRITERIA DI RSUD KEPULAUAN SERIBU."
+      },
+      {
+        id: "isk",
+        name: "ISK",
+        icd10: "N30.0",
+        procedures: "Microscopic blood (90.59), Injection/infusion of electrolytes (99.18), Urinalisis / kultur urin",
+        claim: ECLAIM_TARIFF_MAP.isk,
+        category: "Ginjal & Saluran Kemih",
+        module: "isk",
+        note: "Ceklist gejala ISK bawah (uretra & kandung kemih: disuria, anyang-anyangan, perubahan tampilan/bau urine, nyeri perut bagian bawah) serta ceklist tanda bahaya ISK atas / pielonefritis (demam tinggi & menggigil, nyeri pinggang/punggung bawah/sisi tubuh, mual & muntah)."
+      },
+      {
+        id: "ckd",
+        name: "CKD",
+        icd10: "N18",
+        procedures: "Evaluasi fungsi ginjal & elektrolit",
+        claim: ECLAIM_TARIFF_MAP.ckd,
+        category: "Ginjal & Saluran Kemih",
+        note: "Cantumkan stadium/data fungsi ginjal pada resume medis."
+      },
+      {
+        id: "ht_kidney",
+        name: "Hipertensive kidney disease",
+        icd10: "I12.9",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.ht_kidney,
+        category: "Ginjal & Saluran Kemih",
+        note: "Pastikan hubungan hipertensi dan kelainan ginjal tercantum."
+      },
+      {
+        id: "bph",
+        name: "BPH",
+        icd10: "N40",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.bph,
+        category: "Ginjal & Saluran Kemih",
+        note: "Lengkapi catatan klinis urologi/rawat inap."
+      },
+      {
+        id: "gea",
+        name: "Diare / GEA (Gastroenteritis Akut)",
+        icd10: "A09 / K52.9 / A00-A08",
+        procedures: "Rehidrasi oral / IV & analisa feses sesuai indikasi",
+        claim: ECLAIM_TARIFF_MAP.gea,
+        category: "Gastrointestinal & Hepatobilier",
+        module: "gea",
+        note: "BAB cair > 3 kali dalam 24 jam. Evaluasi Skor Daldiyono dan 7 indikasi rawat inap."
+      },
+      {
+        id: "gastroenteritis_noninf",
+        name: "Noninfective gastroenteritis and colitis, unspecified",
+        icd10: "K2.9",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.gastroenteritis_noninf,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Verifikasi kesesuaian kode dan catatan medis."
+      },
+      {
+        id: "disentri",
+        name: "Disentri (shigellosis/amoebiasis)",
+        icd10: "A03.9",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.disentri,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Sesuaikan dengan hasil klinis/mikroskopis feses."
+      },
+      {
+        id: "abd_pain",
+        name: "Abdominal pain",
+        icd10: "R10.4",
+        procedures: "Other diagnostic ultrasound (88.79)",
+        claim: ECLAIM_TARIFF_MAP.abd_pain,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Lampirkan hasil USG diagnostik (88.79) bila dilakukan."
+      },
+      {
+        id: "colic_renal",
+        name: "Colic renal",
+        icd10: "N23",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.colic_renal,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Catat nyeri kolik ginjal dan tatalaksana analgesik/spasmolitik."
+      },
+      {
+        id: "kolesistitis",
+        name: "Cholesistitis",
+        icd10: "K81.9",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.kolesistitis,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Lampirkan bukti klinis/USG kandung empedu."
+      },
+      {
+        id: "kolelitiasis",
+        name: "Cholelitiasis",
+        icd10: "K80",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.kolelitiasis,
+        category: "Gastrointestinal & Hepatobilier",
+        note: "Lampirkan hasil pencitraan/USG batu empedu."
+      },
+      {
+        id: "masld",
+        name: "Fatty Liver (MASLD)",
+        icd10: "K76.0",
+        procedures: "FIB-4 Score & evaluasi profil metabolik",
+        claim: ECLAIM_TARIFF_MAP.masld,
+        category: "Gastrointestinal & Hepatobilier",
+        module: "masld",
+        note: "Regulasi: TKMKB April 2026. FIB-4 >= 1,3 + >= 3 kriteria MASLD dapat diajukan ke BPJS; FIB-4 < 1,3 TIDAK diajukan sebagai diagnosis sekunder."
+      },
+      {
+        id: "stroke",
+        name: "Stroke",
+        icd10: "I63",
+        procedures: "Microscopic blood (90.59), Electrolytes (99.18), EKG (89.52), harus CT scan",
+        claim: ECLAIM_TARIFF_MAP.stroke,
+        category: "Neurologi",
+        note: "SYARAT WAJIB: Harus ada CT scan kepala serta pemeriksaan pendukung sesuai berkas."
+      },
+      {
+        id: "kejang_demam",
+        name: "Kejang demam",
+        icd10: "R56.0",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.kejang_demam,
+        category: "Neurologi",
+        note: "Catat frekuensi/durasi kejang dan tatalaksana antipiretik/antikonvulsan."
+      },
+      {
+        id: "epilepsi",
+        name: "Epilepsy",
+        icd10: "G40",
+        procedures: "harus ada EEG",
+        claim: ECLAIM_TARIFF_MAP.epilepsi,
+        category: "Neurologi",
+        note: "SYARAT WAJIB: Harus ada pemeriksaan EEG."
+      },
+      {
+        id: "paralytic_syndrome",
+        name: "Paralytic syndrom (decomp)",
+        icd10: "G83.9",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.paralytic_syndrome,
+        category: "Neurologi",
+        note: "Dokumentasikan defisit motorik dan pemeriksaan neurologis."
+      },
+      {
+        id: "dm",
+        name: "DM (Diabetes Melitus)",
+        icd10: "E11.9",
+        procedures: "Microscopic blood (90.59), Injection/infusion of electrolytes (99.18)",
+        claim: ECLAIM_TARIFF_MAP.dm,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Catat kadar glukosa darah dan terapi regulasi gula darah."
+      },
+      {
+        id: "ht",
+        name: "HT (Hipertensi)",
+        icd10: "I10",
+        procedures: "-",
+        claim: ECLAIM_TARIFF_MAP.ht,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Catat tekanan darah serial dan terapi antihipertensi."
+      },
+      {
+        id: "dm_ht",
+        name: "DM + HT",
+        icd10: "E11.9 & I10",
+        procedures: "Sesuai kondisi klinis",
+        claim: ECLAIM_TARIFF_MAP.dm_ht,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Pastikan kedua kondisi terdokumentasi jelas dalam rekam medis."
+      },
+      {
+        id: "kad",
+        name: "KAD (Ketoasidosis Diabetikum)",
+        icd10: "E11.10",
+        procedures: "Rehidrasi, insulin & koreksi elektrolit",
+        claim: ECLAIM_TARIFF_MAP.kad,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Lampirkan parameter keton/asidosis/gula darah sesuai tatalaksana."
+      },
+      {
+        id: "hhs",
+        name: "HHS",
+        icd10: "E11.00",
+        procedures: "Rehidrasi & koreksi metabolik",
+        claim: ECLAIM_TARIFF_MAP.hhs,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Catat osmolaritas/glukosa darah dan terapi cairan."
+      },
+      {
+        id: "hipoglikemia",
+        name: "Hipoglikemia",
+        icd10: "E16.2",
+        procedures: "Koreksi glukosa darah",
+        claim: ECLAIM_TARIFF_MAP.hipoglikemia,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Catat kadar gula darah sebelum dan sesudah koreksi."
+      },
+      {
+        id: "hipokalemia",
+        name: "Hipokalemia",
+        icd10: "E87.6",
+        procedures: "Koreksi kalium",
+        claim: ECLAIM_TARIFF_MAP.hipokalemia,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Lampirkan hasil elektrolit serum sebelum/sesudah koreksi."
+      },
+      {
+        id: "hiponatremia",
+        name: "Hiponatremia",
+        icd10: "E87.1",
+        procedures: "Koreksi natrium",
+        claim: ECLAIM_TARIFF_MAP.hiponatremia,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Lampirkan hasil elektrolit serum sebelum/sesudah koreksi."
+      },
+      {
+        id: "elektrolit_imbalance",
+        name: "Elektrolit imbalance",
+        icd10: "E87.8",
+        procedures: "Koreksi ketidakseimbangan elektrolit",
+        claim: ECLAIM_TARIFF_MAP.elektrolit_imbalance,
+        category: "Endokrin, Metabolik & Elektrolit",
+        note: "Gunakan kode elektrolit spesifik (E87.6 / E87.1) bila jenisnya sudah pasti."
+      },
+      {
+        id: "normal_labour",
+        name: "Normal labour",
+        icd10: "O80, Z37.0",
+        procedures: "Spontan delivery (73.59), CTG (75.32)",
+        claim: ECLAIM_TARIFF_MAP.normal_labour,
+        category: "Obstetri & Luka",
+        note: "Cantumkan kode luaran persalinan (Z37.0) serta tindakan persalinan spontan (73.59) & CTG (75.32)."
+      },
+      {
+        id: "heg",
+        name: "HEG (Hiperemesis Gravidarum)",
+        icd10: "O21.0",
+        procedures: "Rehidrasi, koreksi elektrolit & antiemetik sesuai indikasi",
+        claim: ECLAIM_TARIFF_MAP.heg,
+        category: "Obstetri & Luka",
+        module: "heg",
+        note: "Evaluasi Skor PUQE (24 jam terakhir: durasi mual, frekuensi muntah, dan retching -> <=6 ringan, 7–12 sedang, 13–15 berat), status dehidrasi, ketonuria, dan gangguan elektrolit."
+      },
+      {
+        id: "isk_hamil",
+        name: "ISK pada ibu hamil",
+        icd10: "O23.4",
+        procedures: "Terapi sesuai kehamilan",
+        claim: ECLAIM_TARIFF_MAP.isk_hamil,
+        category: "Obstetri & Luka",
+        note: "Pastikan status kehamilan dan infeksi saluran kemih tercatat jelas."
+      },
+      {
+        id: "anemia_hamil",
+        name: "Anemia pada ibu hamil",
+        icd10: "O99.0",
+        procedures: "Transfusion of blood and blood components (99)",
+        claim: ECLAIM_TARIFF_MAP.anemia_hamil,
+        category: "Obstetri & Luka",
+        note: "Lampirkan kadar Hb dan bukti transfusi (99) bila diberikan."
+      },
+      {
+        id: "ulcus_luka_postop",
+        name: "Ulkus DM & Luka Pasca Operasi",
+        icd10: "E11.5 (E10–E14 .5) / T81.4 / Z48.8 / O86.0",
+        procedures: "Debridement / amputasi / perawatan luka / kontrol",
+        claim: ECLAIM_TARIFF_MAP.ulcus_luka_postop,
+        category: "Obstetri & Luka",
+        module: "wound",
+        note: "Kriteria Diagnosis — Slide 11: Ulkus Diabetikum (nekrotik -> debridement/amputasi; luka kronis multidisiplin; tanpa infeksi & nekrotik -> kontrol DPJP maks 1x/bulan; Koding INA-CBG E10–E14 karakter ke-4: .5) & Luka Pasca Operasi (Strip 1, Strip 2, Strip 3, Fase Penyembuhan & Faktor Penyembuhan)."
+      },
+      createSttEntry(
+        "stt_d21_0",
+        "Soft Tissue Tumor — Kepala, Wajah & Leher",
+        "D21.0",
+        "Benign neoplasm of connective and other soft tissue of head, face and neck"
+      ),
+      createSttEntry(
+        "stt_d21_1",
+        "Soft Tissue Tumor — Ekstremitas Atas & Bahu",
+        "D21.1",
+        "Benign neoplasm of connective and other soft tissue of upper limb, including shoulder"
+      ),
+      createSttEntry(
+        "stt_d21_2",
+        "Soft Tissue Tumor — Ekstremitas Bawah & Panggul",
+        "D21.2",
+        "Benign neoplasm of connective and other soft tissue of lower limb, including hip"
+      ),
+      createSttEntry(
+        "stt_d21_3",
+        "Soft Tissue Tumor — Toraks",
+        "D21.3",
+        "Benign neoplasm of connective and other soft tissue of thorax"
+      ),
+      createSttEntry(
+        "stt_d21_4",
+        "Soft Tissue Tumor — Abdomen",
+        "D21.4",
+        "Benign neoplasm of connective and other soft tissue of abdomen"
+      ),
+      createSttEntry(
+        "stt_d21_5",
+        "Soft Tissue Tumor — Pelvis",
+        "D21.5",
+        "Benign neoplasm of connective and other soft tissue of pelvis"
+      ),
+      createSttEntry(
+        "stt_d21_6",
+        "Soft Tissue Tumor — Trunkus, Tidak Spesifik",
+        "D21.6",
+        "Benign neoplasm of connective and other soft tissue of trunk, unspecified"
+      ),
+      createSttEntry(
+        "stt_d21_9",
+        "Soft Tissue Tumor — Jaringan Lunak, Tidak Spesifik",
+        "D21.9",
+        "Benign neoplasm of connective and other soft tissue, unspecified"
+      ),
+      createSttEntry(
+        "stt_d17",
+        "Soft Tissue Tumor — Lipoma (Jaringan Lemak)",
+        "D17.0–D17.9",
+        "Benign lipomatous neoplasm"
+      ),
+      createSttEntry(
+        "stt_d48_1",
+        "Soft Tissue Tumor — Uncertain Behavior",
+        "D48.1",
+        "Neoplasm of uncertain or unknown behaviour of connective and other soft tissue"
+      ),
+      createSttEntry(
+        "stt_c49",
+        "Soft Tissue Tumor — Neoplasma Ganas",
+        "C49.0–C49.9",
+        "Malignant neoplasm of connective and other soft tissue"
+      )
+    ];
+
+    const DEFAULT_DIAG_META = Object.fromEntries(
+      DIAGNOSES.map((d) => [d.id, { name: d.name, icd10: d.icd10 }])
+    );
+
+    let selectedId = "";
+    let roleFeedbackMsg = "";
+    let savedState = loadSavedState();
+
+    function getTariffMultiplier() {
+      const raw = document.getElementById("eclaimClassSelect")?.value;
+      const val = parseFloat(raw || "1.0");
+      return Number.isFinite(val) && val > 0 ? val : 1.0;
+    }
+
+    function getAdjustedClaim(baseClaim) {
+      if (!baseClaim || baseClaim <= 0) return 0;
+      return Math.round(baseClaim * getTariffMultiplier());
+    }
+
+    const formatRp = (num) => {
+      if (!num || num <= 0) return "Tidak Berlaku / Dikecualikan";
+      return "Rp " + Number(num).toLocaleString("id-ID");
+    };
+
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return {
+            selectedId: "",
+            tariffMultiplier: "",
+            customTariffs: {},
+            codeOverrides: {},
+            formValues: {},
+            lastSavedAt: null
+          };
+        }
+        const parsed = JSON.parse(raw);
+        const codeOverrides = parsed.codeOverrides || {};
+        if (parsed.pneumoniaCodeOverride && !codeOverrides.pneumonia) {
+          codeOverrides.pneumonia = parsed.pneumoniaCodeOverride;
+        }
+        if (codeOverrides.pneumonia) {
+          codeOverrides.pneumonia.name = "Pneumonia";
+        }
+        return {
+          selectedId: typeof parsed.selectedId === "string" ? parsed.selectedId : "",
+          tariffMultiplier: typeof parsed.tariffMultiplier === "string" ? parsed.tariffMultiplier : "",
+          customTariffs: parsed.customTariffs || {},
+          codeOverrides,
+          formValues: parsed.formValues || {},
+          lastSavedAt: parsed.lastSavedAt || null
+        };
+      } catch {
+        return {
+          selectedId: "",
+          tariffMultiplier: "",
+          customTariffs: {},
+          codeOverrides: {},
+          formValues: {},
+          lastSavedAt: null
+        };
+      }
+    }
+
+    function applySavedOverridesToDiagnoses() {
+      if (savedState.customTariffs) {
+        DIAGNOSES.forEach((d) => {
+          if (Object.prototype.hasOwnProperty.call(savedState.customTariffs, d.id)) {
+            const savedVal = Number(savedState.customTariffs[d.id]);
+            const defaultVal = ECLAIM_TARIFF_MAP[d.id];
+            if (d.id.startsWith("stt_") && defaultVal === 2880700 && savedVal === 2007700) {
+              d.claim = defaultVal;
+              delete savedState.customTariffs[d.id];
+            } else {
+              d.claim = savedVal || 0;
+            }
+          }
+        });
+      }
+      if (savedState.codeOverrides) {
+        Object.entries(savedState.codeOverrides).forEach(([diagId, ov]) => {
+          const target = DIAGNOSES.find((d) => d.id === diagId);
+          if (target && ov) {
+            target.icd10 = ov.icd10;
+            target.name = diagId === "pneumonia" ? "Pneumonia" : ov.name;
+          }
+        });
+      }
+    }
+
+    function renderTariffLockMsg() {
+      const el = document.getElementById("tariffLockMsg");
+      if (!el) return;
+      el.textContent = tariffLockMsgText;
+      el.style.color = tariffLockIsError ? "#b91c1c" : isTariffUnlocked ? "#15803d" : "#92400e";
+    }
+
+    function unlockTariffSection() {
+      const input = document.getElementById("tariffUnlockPassword");
+      const val = (input?.value || "").trim().toLowerCase();
+      if (val === TARIFF_UNLOCK_PASS) {
+        isTariffUnlocked = true;
+        tariffLockIsError = false;
+        tariffLockMsgText = "Kunci dibuka. Silakan ubah nominal tarif dasar E-Klaim lalu klik Terapkan Tarif E-Klaim.";
+        renderDetail();
+        setTimeout(() => document.getElementById("customTariffInput")?.focus(), 0);
+      } else {
+        isTariffUnlocked = false;
+        tariffLockIsError = true;
+        tariffLockMsgText = "Password salah. Coba periksa kembali password Anda.";
+        renderTariffLockMsg();
+        input?.focus();
+      }
+    }
+
+    function lockTariffSection() {
+      isTariffUnlocked = false;
+      tariffLockIsError = false;
+      tariffLockMsgText = "Penyesuaian Tarif Dasar E-Klaim telah dikunci kembali.";
+      renderDetail();
+    }
+
+    function applyCustomTariff(diagId) {
+      if (!isTariffUnlocked) {
+        tariffLockIsError = true;
+        tariffLockMsgText = "Bagian Penyesuaian Tarif Dasar E-Klaim sedang terkunci. Buka kunci terlebih dahulu.";
+        renderTariffLockMsg();
+        return;
+      }
+
+      const input = document.getElementById("customTariffInput");
+      const rawVal = Number(input?.value);
+      if (!Number.isFinite(rawVal) || rawVal < 0) {
+        roleFeedbackMsg = "Masukkan nominal tarif E-Klaim yang valid (angka >= 0).";
+        updateRoleFeedback();
+        return;
+      }
+      const diag = DIAGNOSES.find((d) => d.id === diagId);
+      if (!diag) return;
+      diag.claim = Math.round(rawVal);
+      savedState.customTariffs[diagId] = diag.claim;
+      saveAllData(false);
+      roleFeedbackMsg = `Tarif dasar E-Klaim untuk "${diag.name}" diperbarui menjadi ${formatRp(diag.claim)}.`;
+      syncDiagnosisSelector();
+      renderDetail();
+    }
+
+    function captureCurrentFormValues(diagId) {
+      if (!diagId) return;
+      if (!savedState.formValues[diagId]) {
+        savedState.formValues[diagId] = { checks: {}, selects: {} };
+      }
+      const bucket = savedState.formValues[diagId];
+
+      document.querySelectorAll("#detailPanel input[type='checkbox']").forEach((chk, idx) => {
+        const key = chk.id || `${diagId}_chk_${idx}`;
+        bucket.checks[key] = chk.checked;
+      });
+
+      document.querySelectorAll("#detailPanel select").forEach((sel, idx) => {
+        const key = sel.id || `${diagId}_sel_${idx}`;
+        bucket.selects[key] = sel.value;
+      });
+    }
+
+    function restoreFormValues(diagId) {
+      const bucket = savedState.formValues[diagId];
+      if (!bucket) return;
+
+      document.querySelectorAll("#detailPanel input[type='checkbox']").forEach((chk, idx) => {
+        const key = chk.id || `${diagId}_chk_${idx}`;
+        if (Object.prototype.hasOwnProperty.call(bucket.checks, key)) {
+          chk.checked = Boolean(bucket.checks[key]);
+        }
+      });
+
+      document.querySelectorAll("#detailPanel select").forEach((sel, idx) => {
+        const key = sel.id || `${diagId}_sel_${idx}`;
+        if (Object.prototype.hasOwnProperty.call(bucket.selects, key)) {
+          sel.value = bucket.selects[key];
+        }
+      });
+    }
+
+    function saveAllData(showMessage = true) {
+      captureCurrentFormValues(selectedId);
+      savedState.selectedId = selectedId;
+      savedState.tariffMultiplier = document.getElementById("eclaimClassSelect")?.value ?? "";
+      savedState.lastSavedAt = new Date().toLocaleString("id-ID");
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+        if (showMessage) {
+          roleFeedbackMsg = `Data berhasil disimpan (${savedState.lastSavedAt}).`;
+          updateRoleFeedback();
+        }
+      } catch {
+        if (showMessage) {
+          roleFeedbackMsg = "Gagal menyimpan ke penyimpanan lokal browser.";
+          updateRoleFeedback();
+        }
+      }
+    }
+
+    function resetDiagData(diagId) {
+      delete savedState.formValues[diagId];
+      delete savedState.customTariffs[diagId];
+      delete savedState.codeOverrides[diagId];
+      if (diagId === "pneumonia") {
+        savedState.pneumoniaCodeOverride = null;
+      }
+      const diag = DIAGNOSES.find((d) => d.id === diagId);
+      const meta = DEFAULT_DIAG_META[diagId];
+      if (diag) {
+        if (Object.prototype.hasOwnProperty.call(ECLAIM_TARIFF_MAP, diagId)) {
+          diag.claim = ECLAIM_TARIFF_MAP[diagId];
+        }
+        if (meta) {
+          diag.name = meta.name;
+          diag.icd10 = meta.icd10;
+        }
+      }
+      saveAllData(false);
+      syncDiagnosisSelector();
+      renderDetail();
+      roleFeedbackMsg = "Data checklist, koding ICD-10 & tarif pada diagnosis ini telah direset.";
+      updateRoleFeedback();
+    }
+
+    function triggerFileDownload(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function getCheckedLabelsInDetail() {
+      return [...document.querySelectorAll("#detailPanel input[type='checkbox']:checked")].map((el) => {
+        if (el.dataset.chkLabel) return el.dataset.chkLabel;
+        const container = el.closest(".slide11-strip") || el.parentElement;
+        return container ? container.textContent.trim().replace(/\s+/g, " ") : "Tercentang";
+      });
+    }
+
+    function getSelectSummariesInDetail() {
+      return [...document.querySelectorAll("#detailPanel select")].map((sel) => {
+        const label = sel.dataset.selectLabel ? `${sel.dataset.selectLabel}: ` : "";
+        const optText = sel.selectedOptions?.[0]?.textContent?.trim() || sel.value;
+        return `${label}${optText}`;
+      });
+    }
+
+    function buildDiagnosisReportText(diag) {
+      captureCurrentFormValues(diag.id);
+      const checked = getCheckedLabelsInDetail();
+      const selects = getSelectSummariesInDetail();
+      const modeLabel = document.getElementById("eclaimClassSelect")?.selectedOptions?.[0]?.textContent?.trim() || "- pilih -";
+
+      const lines = [
+        "=== LAPORAN KRITERIA & KODING KLINIS — RSUD KEPULAUAN SERIBU ===",
+        `Waktu Cetak       : ${new Date().toLocaleString("id-ID")}`,
+        `Kelompok Tarif    : ${modeLabel}`,
+        `Diagnosis         : ${diag.name}`,
+        `Kategori          : ${diag.category}`,
+        `Kode ICD-10       : ${diag.icd10}`,
+        `Tindakan/Prosedur : ${diag.procedures}`,
+        `Estimasi Klaim    : ${formatRp(getAdjustedClaim(diag.claim))} (Tarif E-Klaim: ${formatRp(diag.claim)})`,
+        `Catatan Regulasi  : ${diag.note}`,
+        ""
+      ];
+
+      if (selects.length) {
+        lines.push("Pilihan Kriteria/Skor:");
+        selects.forEach((s) => lines.push(`- ${s}`));
+        if (diag.id === "heg") {
+          const puqeSummary = document.getElementById("puqeResult")?.textContent?.trim();
+          if (puqeSummary) {
+            lines.push(`- Hasil ${puqeSummary}`);
+          }
+        }
+        if (diag.id === "ppok") {
+          const ppokSummary = document.getElementById("ppokCriteriaResult")?.textContent?.trim();
+          const goldSummary = document.getElementById("ppokGoldResult")?.textContent?.trim();
+          if (ppokSummary) lines.push(`- ${ppokSummary}`);
+          if (goldSummary) lines.push(`- ${goldSummary}`);
+        }
+        if (diag.id === "tb_paru") {
+          const tbDiagSummary = document.getElementById("tbDiagResult")?.textContent?.trim();
+          const tbOsceSummary = document.getElementById("tbOsceScoreResult")?.textContent?.trim();
+          if (tbDiagSummary) lines.push(`- ${tbDiagSummary}`);
+          if (tbOsceSummary) lines.push(`- ${tbOsceSummary}`);
+        }
+        lines.push("");
+      }
+
+      if (diag.id === "bacterial_inf") {
+        const bacSummary = document.getElementById("bacterialCriteriaResult")?.textContent?.trim();
+        if (bacSummary) {
+          lines.push(`Ringkasan Kriteria Bacterial Infection: ${bacSummary}`);
+          lines.push("");
+        }
+      }
+
+      if (diag.id === "asma") {
+        const asmaSummary = document.getElementById("asmaCriteriaResult")?.textContent?.trim();
+        if (asmaSummary) {
+          lines.push(`Ringkasan Kriteria Asma: ${asmaSummary}`);
+          lines.push("");
+        }
+      }
+
+      if (diag.id === "isk") {
+        const iskLowerSummary = document.getElementById("iskLowerResult")?.textContent?.trim();
+        const iskUpperSummary = document.getElementById("iskUpperResult")?.textContent?.trim();
+        if (iskLowerSummary || iskUpperSummary) {
+          lines.push("Ringkasan Kriteria ISK:");
+          if (iskLowerSummary) lines.push(`- ${iskLowerSummary}`);
+          if (iskUpperSummary) lines.push(`- ${iskUpperSummary}`);
+          lines.push("");
+        }
+      }
+
+      if (diag.id === "viral_inf") {
+        const viralSummary = document.getElementById("viralCriteriaResult")?.textContent?.trim();
+        if (viralSummary) {
+          lines.push(`Ringkasan Kriteria: ${viralSummary}`);
+          lines.push("");
+        }
+      }
+
+      if (diag.id === "malaria") {
+        const malDiagSummary = document.getElementById("malariaDiagResult")?.textContent?.trim();
+        const malSevereSummary = document.getElementById("malariaSevereResult")?.textContent?.trim();
+        if (malDiagSummary || malSevereSummary) {
+          lines.push("Ringkasan Kriteria Malaria:");
+          if (malDiagSummary) lines.push(`- ${malDiagSummary}`);
+          if (malSevereSummary) lines.push(`- ${malSevereSummary}`);
+          lines.push("");
+        }
+      }
+
+      lines.push(`Checklist Terpilih (${checked.length}):`);
+      if (checked.length) {
+        checked.forEach((c) => lines.push(`[x] ${c}`));
+      } else {
+        lines.push("- Tidak ada item yang dicentang");
+      }
+
+      return lines.join("\n");
+    }
+
+    function downloadDiagnosisTxt(diagId) {
+      const diag = DIAGNOSES.find((d) => d.id === diagId) || DIAGNOSES[0];
+      saveAllData(false);
+      const text = buildDiagnosisReportText(diag);
+      triggerFileDownload(`kriteria_${diag.id}_rsud_kep_seribu.txt`, text, "text/plain;charset=utf-8");
+    }
+
+    function getSearchRelevanceScore(diag, q) {
+      const name = (diag.name || "").toLowerCase();
+      const baseName = (DEFAULT_DIAG_META[diag.id]?.name || diag.name || "").toLowerCase();
+      const icd10 = (diag.icd10 || "").toLowerCase();
+      const procedures = (diag.procedures || "").toLowerCase();
+      const note = (diag.note || "").toLowerCase();
+      const extraOptions = (ICD10_OPTIONS_BY_DIAG[diag.id] || [])
+        .map((o) => `${o.code} ${o.label}`.toLowerCase())
+        .join(" ");
+
+      if (name.startsWith(q) || baseName.startsWith(q)) return 100;
+      if (icd10.startsWith(q)) return 90;
+      if (name.includes(q) || baseName.includes(q)) return 80;
+      if (icd10.includes(q)) return 70;
+      if (extraOptions.includes(q)) return 50;
+      if (procedures.includes(q) || note.includes(q)) return 30;
+      return 0;
+    }
+
+    function getFilteredDiagnoses() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const cat = document.getElementById("categoryFilter").value;
+
+      const byCat = DIAGNOSES.filter((d) => cat === "ALL" || d.category === cat);
+      if (!q) return byCat;
+
+      return byCat
+        .map((d) => ({ diag: d, score: getSearchRelevanceScore(d, q) }))
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((item) => item.diag);
+    }
+
+    function syncDiagnosisSelector() {
+      const sel = document.getElementById("diagQuickSelect");
+      const filtered = getFilteredDiagnoses();
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+
+      if (!filtered.length) {
+        sel.innerHTML = `<option value="">-diagnosa-</option>`;
+        selectedId = "";
+        return;
+      }
+
+      if (q) {
+        selectedId = filtered[0].id;
+      } else if (selectedId && !filtered.some((d) => d.id === selectedId)) {
+        selectedId = "";
+      }
+
+      const optionsHtml =
+        `<option value="">-diagnosa-</option>` +
+        filtered.map((d) => `<option value="${d.id}">${d.name} (${d.icd10})</option>`).join("");
+      sel.innerHTML = optionsHtml;
+      sel.value = selectedId || "";
+    }
+
+    function applyDiagnosisCode(diagId, code, label) {
+      const diag = DIAGNOSES.find((d) => d.id === diagId);
+      if (!diag) return;
+      const baseName = (DEFAULT_DIAG_META[diagId]?.name || diag.name).split(" (")[0];
+      const nextName =
+        diagId === "pneumonia"
+          ? "Pneumonia"
+          : label && label !== baseName
+            ? `${baseName} (${label})`
+            : baseName;
+      diag.icd10 = code;
+      diag.name = nextName;
+      savedState.codeOverrides[diagId] = { icd10: diag.icd10, name: diag.name };
+      if (diagId === "pneumonia") {
+        savedState.pneumoniaCodeOverride = { icd10: diag.icd10, name: diag.name };
+      }
+      saveAllData(false);
+      roleFeedbackMsg = `Koding ICD-10 ${baseName} diperbarui menjadi ${code} (${label}).`;
+      syncDiagnosisSelector();
+      renderDetail();
+    }
+
+    function getIcd10OptionsForDiag(diag) {
+      if (ICD10_OPTIONS_BY_DIAG[diag.id]) {
+        return ICD10_OPTIONS_BY_DIAG[diag.id];
+      }
+      const defaultMeta = DEFAULT_DIAG_META[diag.id];
+      const primaryCode = defaultMeta?.icd10 || diag.icd10;
+      const baseLabel = defaultMeta?.name || diag.name;
+      const list = [{ code: primaryCode, label: baseLabel }];
+      if (diag.icd10.trim() !== primaryCode.trim()) {
+        list.push({ code: diag.icd10, label: diag.name });
+      }
+      return list;
+    }
+
+    function renderIcd10Section(diag, headingText) {
+      const options = getIcd10OptionsForDiag(diag);
+      const baseName = (DEFAULT_DIAG_META[diag.id]?.name || diag.name).split(" (")[0];
+      const title = headingText || `Koding ICD-10 ${baseName}`;
+      return `
+        <div class="sub-card">
+          <h4>${title}</h4>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            ${options
+              .map((opt) => {
+                const isActive = diag.icd10.trim() === opt.code.trim();
+                const safeCode = opt.code.replace(/'/g, "\\'");
+                const safeLabel = opt.label.replace(/'/g, "\\'");
+                return `<button class="icd-code-btn ${isActive ? "active" : ""}" type="button" onclick="applyDiagnosisCode('${diag.id}', '${safeCode}', '${safeLabel}')">${opt.code} (${opt.label})</button>`;
+              })
+              .join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInacbgsBpjsCriteriaCard(diag) {
+      const procText = diag.procedures && diag.procedures !== "-" ? diag.procedures : "Sesuai tatalaksana & indikasi klinis";
+      const items = [
+        {
+          label: `INA-CBGs: Kode ICD-10 (${diag.icd10}) sesuai resume medis & tidak menggunakan kode tidak spesifik jika fokus/etiologi sudah jelas`,
+          chkLabel: `INA-CBGs [${diag.name}]: Kode ICD-10 (${diag.icd10}) sesuai resume medis`
+        },
+        {
+          label: `INA-CBGs: Tindakan/prosedur (${procText}) & kode ICD-9-CM sesuai tindakan nyata yang dilakukan`,
+          chkLabel: `INA-CBGs [${diag.name}]: Tindakan/prosedur (${procText}) & ICD-9-CM sesuai`
+        },
+        {
+          label: "INA-CBGs: Diagnosis utama mencerminkan kondisi utama penyebab pelayanan & diagnosis sekunder/komorbid terdokumentasi jelas",
+          chkLabel: `INA-CBGs [${diag.name}]: Diagnosis utama & sekunder/komorbid sesuai`
+        },
+        {
+          label: "INA-CBGs: Bukti klinis (anamnesis, tanda vital/pemeriksaan fisik, penunjang lab/radiologi/EKG) serta indikasi rawat/terapi lengkap",
+          chkLabel: `INA-CBGs [${diag.name}]: Bukti klinis, penunjang & indikasi terapi lengkap`
+        }
+      ];
+
+      return `
+        <div class="sub-card">
+          <h4>Kriteria Verifikasi INA-CBGs BPJS</h4>
+          <div class="check-grid">
+            ${items
+              .map(
+                (it) =>
+                  `<label class="check-label"><input type="checkbox" class="inacbgs-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateInacbgsCalc()"> ${it.label}</label>`
+              )
+              .join("")}
+          </div>
+          <div id="inacbgsCriteriaResult" class="score-pill alert-warn">Kelengkapan INA-CBGs: 0/4 kriteria terverifikasi</div>
+          ${
+            diag.excluded
+              ? `<div class="alert alert-danger" style="margin-top:8px;">Catatan INA-CBGs BPJS: Diagnosis ini berstatus dikecualikan di RSUD Kepulauan Seribu — verifikasi ulang kelayakan klaim sebelum pengajuan.</div>`
+              : ""
+          }
+        </div>
+      `;
+    }
+
+    function updateInacbgsCalc() {
+      const all = document.querySelectorAll(".inacbgs-chk");
+      const checked = document.querySelectorAll(".inacbgs-chk:checked").length;
+      const el = document.getElementById("inacbgsCriteriaResult");
+      if (!el || !all.length) return;
+      const isExcluded = Boolean(document.getElementById("detailPanel")?.classList.contains("panel-excluded"));
+      const complete = checked === all.length;
+      el.className = "score-pill " + (isExcluded ? "alert-danger" : complete ? "alert-ok" : "alert-warn");
+      el.textContent = isExcluded
+        ? `Kelengkapan INA-CBGs: ${checked}/${all.length} kriteria — PERINGATAN: Diagnosis dikecualikan`
+        : complete
+          ? `Kelengkapan INA-CBGs: ${checked}/${all.length} kriteria TERPENUHI (Siap verifikasi koding & klaim)`
+          : `Kelengkapan INA-CBGs: ${checked}/${all.length} kriteria terverifikasi (lengkapi seluruh poin INA-CBGs)`;
+      if (selectedId) {
+        captureCurrentFormValues(selectedId);
+      }
+    }
+
+    function renderInteractiveModule(diag) {
+      if (diag.module === "bacterial_inf") {
+        const bacterialCriteriaItems = [
+          {
+            title: "Definisi Klinis",
+            desc: "Infeksi akut akibat patogen bakteri (Gram-positif atau Gram-negatif) dengan manifestasi sistemik maupun lokal, tetapi fokus infeksi primer atau hasil kultur spesifik belum teridentifikasi.",
+            chkLabel: "Bacterial infection, unspecified — Definisi Klinis: Infeksi akut akibat patogen bakteri (Gram-positif atau Gram-negatif) dengan manifestasi sistemik maupun lokal, tetapi fokus infeksi primer atau hasil kultur spesifik belum teridentifikasi"
+          },
+          {
+            title: "Manifestasi Umum",
+            desc: "Demam, menggigil, malaise, lemas, atau tanda inflamasi lokal non-spesifik yang belum mengarah pada satu diagnosis organ tunggal (seperti pneumonia atau ISK).",
+            chkLabel: "Bacterial infection, unspecified — Manifestasi Umum: Demam, menggigil, malaise, lemas, atau tanda inflamasi lokal non-spesifik yang belum mengarah pada satu diagnosis organ tunggal (seperti pneumonia atau ISK)"
+          },
+          {
+            title: "Penunjang Diagnostik",
+            desc: "Ditegakkan melalui evaluasi penanda inflamasi seperti leukositosis dengan dominasi neutrofil (<em>shift to the left</em>), peningkatan CRP (<em>C-Reactive Protein</em>), atau prokalsitonin.",
+            chkLabel: "Bacterial infection, unspecified — Penunjang Diagnostik: Evaluasi penanda inflamasi seperti leukositosis dengan dominasi neutrofil (shift to the left), peningkatan CRP (C-Reactive Protein), atau prokalsitonin"
+          },
+          {
+            title: "Tatalaksana",
+            desc: "Pemberian antibiotik empiris spektrum luas atau sesuai pola kuman lokal sambil menunggu hasil pemeriksaan mikrobiologi/kultur.",
+            chkLabel: "Bacterial infection, unspecified — Tatalaksana: Pemberian antibiotik empiris spektrum luas atau sesuai pola kuman lokal sambil menunggu hasil pemeriksaan mikrobiologi/kultur"
+          }
+        ];
+
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosa — Bacterial infection, unspecified</h3>
+
+            <div class="sub-card">
+              <h4>1. Ceklist Kriteria Klinis, Penunjang &amp; Tatalaksana</h4>
+              <div class="viral-criteria-list">
+                ${bacterialCriteriaItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="bacCritChk_${i}">
+                      <input type="checkbox" id="bacCritChk_${i}" class="bac-crit-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateBacterialInfCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="bacterialCriteriaResult" class="score-pill alert-warn">Ceklist Kriteria Bacterial Infection: 0/4 poin tercentang</div>
+            </div>
+
+            ${renderIcd10Section(diag, "2. Koding ICD-10 Bacterial infection, unspecified")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "asma") {
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosa Asma — Verifikasi Kelayakan Rawat Inap</h3>
+            <p style="margin:0 0 8px; font-size:0.84rem; color:var(--muted);">
+              Verifikator akan memeriksa kelayakan pasien untuk dirawat inap (bukan cukup rawat jalan/observasi IGD):
+            </p>
+
+            <div class="sub-card">
+              <h4>1. Ceklist Kelayakan Rawat Inap Asma</h4>
+              <div class="viral-criteria-list">
+                <label class="viral-chk-card" for="asmaAnamnesisChk">
+                  <input type="checkbox" id="asmaAnamnesisChk" class="asma-crit-chk" data-chk-label="Asma — Anamnesis & Pemeriksaan Fisik: Tercatat keluhan sesak napas progresif, batuk, riwayat asma, serta tanda objektif seperti frekuensi napas (RR > 25–30x/menit), takikardia, retraksi dinding dada, penggunaan otot bantu napas, dan auskultasi wheezing (mengi)" onchange="updateAsmaCalc()">
+                  <span><strong>Anamnesis &amp; Pemeriksaan Fisik.</strong> Tercatat keluhan sesak napas progresif, batuk, riwayat asma, serta tanda objektif seperti frekuensi napas (RR &gt; 25–30x/menit), takikardia, retraksi dinding dada, penggunaan otot bantu napas, dan auskultasi <em>wheezing</em> (mengi).</span>
+                </label>
+
+                <label class="viral-chk-card" for="asmaOksigenasiChk">
+                  <input type="checkbox" id="asmaOksigenasiChk" class="asma-crit-chk" data-chk-label="Asma — Status Oksigenasi & Respons Terapi IGD: Saturasi oksigen (SpO2 < 90–92% pada udara ruang) dan catatan evaluasi pasca-nebulisasi awal di IGD (misalnya: respons inkomplit setelah pemberian nebulisasi SABA/antikolinergik berulang dalam 1–3 jam pertama sehingga butuh rawat inap)" onchange="updateAsmaCalc()">
+                  <span><strong>Status Oksigenasi &amp; Respons Terapi IGD.</strong> Saturasi oksigen (SpO<sub>2</sub> &lt; 90–92% pada udara ruang) dan catatan evaluasi pasca-nebulisasi awal di IGD (misalnya: respons inkomplit setelah pemberian nebulisasi SABA/antikolinergik berulang dalam 1–3 jam pertama sehingga butuh rawat inap).</span>
+                </label>
+
+                <label class="viral-chk-card" for="asmaPenunjangHeadChk">
+                  <input type="checkbox" id="asmaPenunjangHeadChk" class="asma-crit-chk" data-chk-label="Asma — Pemeriksaan Penunjang: Kelengkapan pemeriksaan penunjang asma sesuai indikasi klinis" onchange="updateAsmaCalc()">
+                  <span><strong>Pemeriksaan Penunjang.</strong></span>
+                </label>
+
+                <label class="viral-chk-card sub-indent" for="asmaPefChk">
+                  <input type="checkbox" id="asmaPefChk" class="asma-crit-chk" data-chk-label="Asma — Penunjang PEF/Spirometri: Peak Expiratory Flow (PEF) atau spirometri (jika memungkinkan dilakukan, nilai PEF < 50% prediksi menunjukkan eksaserbasi berat)" onchange="updateAsmaCalc()">
+                  <span><em>Peak Expiratory Flow</em> (PEF) atau spirometri (jika memungkinkan dilakukan, nilai PEF &lt; 50% prediksi menunjukkan eksaserbasi berat).</span>
+                </label>
+
+                <label class="viral-chk-card sub-indent" for="asmaThoraxChk">
+                  <input type="checkbox" id="asmaThoraxChk" class="asma-crit-chk" data-chk-label="Asma — Penunjang Foto Toraks: Foto Toraks (Röntgen) untuk menyingkirkan komplikasi seperti pneumotoraks atau pneumonia" onchange="updateAsmaCalc()">
+                  <span>Foto Toraks (<em>Röntgen</em>) untuk menyingkirkan komplikasi seperti pneumotoraks atau pneumonia.</span>
+                </label>
+
+                <label class="viral-chk-card sub-indent" for="asmaLabAgdChk">
+                  <input type="checkbox" id="asmaLabAgdChk" class="asma-crit-chk" data-chk-label="Asma — Penunjang Darah Rutin/AGD: Laboratorium darah rutin dan/atau AGD (khususnya jika mengkodekan status asthmaticus atau gagal napas)" onchange="updateAsmaCalc()">
+                  <span>Laboratorium darah rutin dan/atau AGD (khususnya jika mengkodekan <em>status asthmaticus</em> atau gagal napas).</span>
+                </label>
+              </div>
+
+              <div id="asmaCriteriaResult" class="score-pill alert-warn">Kelayakan Rawat Inap Asma: 0/6 poin tercentang</div>
+            </div>
+
+            ${renderIcd10Section(diag, "2. Koding ICD-10 Asma")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "isk") {
+        const lowerSymptoms = [
+          {
+            title: "Nyeri atau perih saat buang air kecil",
+            desc: "Muncul sensasi panas atau terbakar (<em>disuria</em>).",
+            chkLabel: "ISK Bawah: Nyeri atau perih saat buang air kecil — sensasi panas atau terbakar (disuria)"
+          },
+          {
+            title: "Sering ingin kencing (anyang-anyangan)",
+            desc: "Frekuensi meningkat tetapi urine yang keluar hanya sedikit dan terasa tidak tuntas.",
+            chkLabel: "ISK Bawah: Sering ingin kencing (anyang-anyangan) — frekuensi meningkat tetapi urine sedikit dan terasa tidak tuntas"
+          },
+          {
+            title: "Perubahan tampilan dan bau urine",
+            desc: "Urine tampak keruh, pekat, kemerahan (berdarah), atau berbau menyengat.",
+            chkLabel: "ISK Bawah: Perubahan tampilan dan bau urine — keruh, pekat, kemerahan (berdarah), atau berbau menyengat"
+          },
+          {
+            title: "Nyeri perut bagian bawah",
+            desc: "Terasa tekanan atau rasa tidak nyaman di area panggul atau tepat di atas tulang kemaluan.",
+            chkLabel: "ISK Bawah: Nyeri perut bagian bawah — tekanan atau rasa tidak nyaman di area panggul atau di atas tulang kemaluan"
+          }
+        ];
+
+        const upperDangerSigns = [
+          {
+            title: "Demam tinggi dan menggigil",
+            desc: "Tanda infeksi sistemik / keterlibatan ginjal.",
+            chkLabel: "ISK Atas (Pielonefritis): Demam tinggi dan menggigil"
+          },
+          {
+            title: "Nyeri di pinggang, punggung bawah, atau sisi tubuh",
+            desc: "Nyeri kostovertebral / panggul lateral mengarah ke infeksi ginjal (pielonefritis).",
+            chkLabel: "ISK Atas (Pielonefritis): Nyeri di pinggang, punggung bawah, atau sisi tubuh"
+          },
+          {
+            title: "Mual dan muntah",
+            desc: "Keluhan saluran cerna penyerta tanda bahaya infeksi ginjal / pielonefritis.",
+            chkLabel: "ISK Atas (Pielonefritis): Mual dan muntah"
+          }
+        ];
+
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosa ISK — Gejala ISK Bawah &amp; Tanda Bahaya ISK Atas</h3>
+
+            <div class="sub-card">
+              <h4>1. Ceklist gejala ISK bawah (uretra &amp; kandung kemih)</h4>
+              <div class="viral-criteria-list">
+                ${lowerSymptoms
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="iskLowerChk_${i}">
+                      <input type="checkbox" id="iskLowerChk_${i}" class="isk-lower-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateIskCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="iskLowerResult" class="score-pill alert-warn">Gejala ISK Bawah: 0/4 item tercentang</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Ceklist tanda bahaya ISK atas (infeksi ginjal / pielonefritis)</h4>
+              <p style="margin:0 0 8px; font-size:0.84rem; color:var(--muted);">
+                Segera periksa ke dokter atau fasilitas kesehatan jika keluhan di atas disertai tanda infeksi ginjal berikut:
+              </p>
+              <div class="viral-criteria-list">
+                ${upperDangerSigns
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="iskUpperChk_${i}">
+                      <input type="checkbox" id="iskUpperChk_${i}" class="isk-upper-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateIskCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="iskUpperResult" class="score-pill alert-ok">Tanda Bahaya ISK Atas: 0/3 tanda tercentang (Tidak ada tanda bahaya terpilih)</div>
+            </div>
+
+            ${renderIcd10Section(diag, "3. Koding ICD-10 ISK")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "tb_paru") {
+        const tbDiagItems = [
+          {
+            title: "Gejala respirasi utama",
+            desc: "Batuk &ge; 2 minggu (dapat berdahak, batuk darah/hemoptisis, sesak napas, atau nyeri dada).",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Gejala respirasi utama (batuk >= 2 minggu, dahak, batuk darah, sesak napas, atau nyeri dada)"
+          },
+          {
+            title: "Gejala sistemik / tambahan",
+            desc: "Demam meriang/tidak tinggi, berkeringat malam hari tanpa aktivitas, penurunan berat badan atau nafsu makan menurun, serta malaise.",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Gejala sistemik/tambahan (demam meriang, keringat malam, BB turun/nafsu makan menurun, malaise)"
+          },
+          {
+            title: "Riwayat epidemiologis & faktor risiko",
+            desc: "Kontak erat dengan pasien TB aktif, riwayat pengobatan TB sebelumnya, imunokompromais (HIV, DM, malnutrisi), atau tinggal/bekerja di lingkungan padat/berisiko.",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Riwayat epidemiologis & faktor risiko (kontak erat TB, riwayat OAT sebelumnya, DM/HIV/malnutrisi, lingkungan berisiko)"
+          },
+          {
+            title: "Pemeriksaan fisik toraks",
+            desc: "Temuan tanda vital & pemeriksaan fisik paru (misalnya ronki basah/suara napas bronkial/penurunan suara napas di apeks atau lobus atas paru, tanda konsolidasi/efusi).",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Pemeriksaan fisik toraks (temuan klinis/auskultasi paru seperti ronki basah di apeks/lapang paru)"
+          },
+          {
+            title: "Pemeriksaan bakteriologis (TCM / BTA / Biakan)",
+            desc: "Tes Cepat Molekuler (TCM <em>M. tuberculosis</em>) atau pemeriksaan mikroskopis BTA sputum (P–S) / biakan positif (TB Paru terkonfirmasi bakteriologis).",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Pemeriksaan bakteriologis (TCM M. tuberculosis / BTA sputum / biakan positif)"
+          },
+          {
+            title: "Pemeriksaan radiologis (Foto Toraks)",
+            desc: "Gambaran foto toraks mendukung TB (infiltrat/bercak di apeks atau segmen apikal/posterior lobus atas, kavitas, fibrosis, kalsifikasi, atau efusi pleura).",
+            chkLabel: "TB Paru — Kriteria Diagnosa: Pemeriksaan radiologis (foto toraks mendukung TB: infiltrat apeks/lobus atas, kavitas, fibrosis, dll.)"
+          }
+        ];
+
+        const osceCompetencies = [
+          {
+            id: "tbOsceAnamnesisSelect",
+            title: "1. Anamnesis (Penggalian Riwayat Penyakit)",
+            points: "Cakupan: durasi & karakteristik batuk (>= 2 minggu), dahak/hemoptisis, gejala konstitusional, riwayat kontak & pengobatan TB, komorbid/faktor risiko.",
+            rubric: "Skor 0: Tidak melakukan / keliru | Skor 1: Sebagian kecil (< 3 poin) | Skor 2: Sebagian besar sistematis (3–4 poin) | Skor 3: Lengkap, runtut & empatik (semua poin utama)"
+          },
+          {
+            id: "tbOsceFisikSelect",
+            title: "2. Pemeriksaan Fisik",
+            points: "Cakupan: cuci tangan & informed consent, tanda vital & status gizi, inspeksi-palpasi-perkusi-auskultasi toraks (termasuk apeks paru) secara tepat & aman.",
+            rubric: "Skor 0: Tidak dilakukan / membahayakan | Skor 1: Tidak runtut / ada bagian penting terlewat | Skor 2: Runtut & tepat, variasi minor | Skor 3: Sistematis, aseptik, akurat & nyaman bagi pasien"
+          },
+          {
+            id: "tbOscePenunjangSelect",
+            title: "3. Pemeriksaan Penunjang & Penegakan Diagnosis",
+            points: "Cakupan: mengusulkan/menginterpretasi TCM/BTA sputum & foto toraks, menegakkan diagnosis TB Paru (terkonfirmasi bakteriologis / klinis) & klasifikasi.",
+            rubric: "Skor 0: Salah / tidak mengarahkan diagnosis | Skor 1: Penunjang/diagnosis kurang tepat | Skor 2: Diagnosis tepat, interpretasi/klasifikasi kurang lengkap | Skor 3: Penunjang tepat, interpretasi akurat & diagnosis lengkap"
+          },
+          {
+            id: "tbOsceTatalaksanaSelect",
+            title: "4. Tatalaksana Farmakologis & Non-Farmakologis",
+            points: "Cakupan: regimen OAT (KDT/FDC fase intensif & lanjutan sesuai indikasi), penentuan dosis/jadwal, tatalaksana komorbid (mis. DM) & alur rujukan/pelaporan.",
+            rubric: "Skor 0: Terapi tidak sesuai / berisiko | Skor 1: Regimen/dosis/alur kurang tepat | Skor 2: Terapi utama tepat, rincian/pemantauan kurang lengkap | Skor 3: Komprehensif, tepat regimen/dosis, aman & sesuai standar"
+          },
+          {
+            id: "tbOsceEdukasiSelect",
+            title: "5. Edukasi & Komunikasi Pasien",
+            points: "Cakupan: etika batuk, ventilasi rumah & pencegahan penularan, kepatuhan minum obat (peran PMO), efek samping OAT (kapan kembali) & jadwal kontrol.",
+            rubric: "Skor 0: Tidak mengedukasi / komunikasi buruk | Skor 1: Edukasi sangat terbatas / kurang jelas | Skor 2: Edukasi cukup jelas, ada 1–2 poin pencegahan/PMO/efek samping terlewat | Skor 3: Jelas, bahasa awam, empatik & mencakup seluruh edukasi TB"
+          }
+        ];
+
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosa TB Paru &amp; Ringkasan Checklist Penilaian OSCE (Skor 0–3 UKMPPD)</h3>
+
+            <div class="sub-card">
+              <h4>1. Ceklist Kriteria Diagnosa TB Paru</h4>
+              <div class="viral-criteria-list">
+                ${tbDiagItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="tbDiagChk_${i}">
+                      <input type="checkbox" id="tbDiagChk_${i}" class="tb-diag-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateTbParuCalc()">
+                      <span><strong>${it.title}:</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="tbDiagResult" class="score-pill alert-warn">Kriteria Diagnosa TB Paru: 0/6 kriteria tercentang</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Ringkasan Checklist Singkat Penilaian OSCE — TB Paru (Standar Nasional UKMPPD, Skor 0–3)</h4>
+              <p style="margin:0 0 8px; font-size:0.84rem; color:var(--muted);">
+                Penilaian tiap kompetensi menggunakan skala <strong>0–3</strong> (total maksimal <strong>15 poin</strong>): <strong>0</strong> = tidak dilakukan/keliru, <strong>1</strong> = kurang memadai, <strong>2</strong> = memadai/baik, <strong>3</strong> = sangat baik/lengkap.
+              </p>
+              <div class="osce-comp-list">
+                ${osceCompetencies
+                  .map(
+                    (comp) => `
+                    <div class="osce-comp-card">
+                      <div class="osce-comp-top">
+                        <label for="${comp.id}" class="osce-comp-title">${comp.title}</label>
+                        <select id="${comp.id}" class="tb-osce-select" data-select-label="OSCE TB Paru — ${comp.title}" onchange="updateTbParuCalc()">
+                          <option value="0">Skor 0 — Tidak dilakukan / Keliru</option>
+                          <option value="1">Skor 1 — Kurang memadai (1/3)</option>
+                          <option value="2">Skor 2 — Memadai / Baik (2/3)</option>
+                          <option value="3">Skor 3 — Sangat baik / Lengkap (3/3)</option>
+                        </select>
+                      </div>
+                      <div class="osce-comp-points">${comp.points}</div>
+                      <div class="osce-rubric-note">${comp.rubric}</div>
+                    </div>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="tbOsceScoreResult" class="score-pill alert-warn">Skor OSCE TB Paru: 0 / 15 poin (0%) — Perlu latihan &amp; kelengkapan kompetensi</div>
+            </div>
+
+            ${renderIcd10Section(diag, "3. Koding ICD-10 TB Paru")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "malaria") {
+        const malDiagItems = [
+          {
+            title: "Gejala klinis utama",
+            desc: "Demam tinggi (sering disertai trias malaria: menggigil, demam tinggi, berkeringat), sakit kepala, nyeri otot/sendi (<em>mialgia</em>), lemas, mual, atau muntah.",
+            chkLabel: "Malaria — Penegakan Diagnosis: Gejala klinis utama (demam tinggi / trias malaria: menggigil, demam tinggi, berkeringat, sakit kepala, mialgia, lemas, mual, atau muntah)"
+          },
+          {
+            title: "Riwayat epidemiologis",
+            desc: "Tinggal di daerah endemis malaria, riwayat bepergian ke wilayah endemis dalam 1–4 minggu terakhir (atau hingga 1 tahun untuk <em>P. vivax</em>), atau riwayat transfusi darah.",
+            chkLabel: "Malaria — Penegakan Diagnosis: Riwayat epidemiologis (daerah endemis, bepergian ke wilayah endemis 1–4 minggu terakhir / hingga 1 tahun untuk P. vivax, atau riwayat transfusi darah)"
+          },
+          {
+            title: "Pemeriksaan fisik",
+            desc: "Suhu tubuh &ge; 37,5&deg;C, konjungtiva pucat (anemia), sklera kuning (ikterik), atau pembesaran limpa dan hati (hepatosplenomegali).",
+            chkLabel: "Malaria — Penegakan Diagnosis: Pemeriksaan fisik (suhu >= 37,5°C, konjungtiva pucat/anemia, sklera kuning/ikterik, atau hepatosplenomegali)"
+          },
+          {
+            title: "Konfirmasi laboratorium (Wajib)",
+            desc: "Ditemukan parasit <em>Plasmodium</em> stadium aseksual melalui pemeriksaan <strong>mikroskopis sediaan darah tebal dan tipis</strong> (<em>gold standard</em>) atau <strong>Rapid Diagnostic Test (RDT)</strong> dalam waktu &lt; 24 jam.",
+            chkLabel: "Malaria — Penegakan Diagnosis (Wajib): Konfirmasi laboratorium parasit Plasmodium stadium aseksual via mikroskopis darah tebal & tipis atau RDT < 24 jam"
+          }
+        ];
+
+        const malSevereClinicalItems = [
+          {
+            title: "Penurunan kesadaran",
+            desc: "Koma atau skor GCS &lt; 11 (pada anak: <em>Blantyre Coma Score</em> &lt; 3).",
+            chkLabel: "Malaria Berat (Klinis): Penurunan kesadaran (koma / GCS < 11; anak: Blantyre Coma Score < 3)"
+          },
+          {
+            title: "Kelemahan otot berat",
+            desc: "Pasien tidak mampu duduk atau berjalan tanpa bantuan.",
+            chkLabel: "Malaria Berat (Klinis): Kelemahan otot berat (tidak mampu duduk atau berjalan tanpa bantuan)"
+          },
+          {
+            title: "Kejang berulang",
+            desc: "Lebih dari 2 episode kejang dalam 24 jam.",
+            chkLabel: "Malaria Berat (Klinis): Kejang berulang (> 2 episode kejang dalam 24 jam)"
+          },
+          {
+            title: "Gagal napas atau edema paru",
+            desc: "Napas cepat (&gt; 30&times;/menit pada dewasa), sesak berat, atau saturasi oksigen &lt; 92%.",
+            chkLabel: "Malaria Berat (Klinis): Gagal napas atau edema paru (napas cepat > 30x/menit dewasa, sesak berat, atau SpO2 < 92%)"
+          },
+          {
+            title: "Syok atau gagal sirkulasi",
+            desc: "Tekanan darah sistolik &lt; 80 mmHg (anak: &lt; 70 mmHg) disertai akral dingin dan pengisian kapiler &gt; 3 detik.",
+            chkLabel: "Malaria Berat (Klinis): Syok atau gagal sirkulasi (TD sistolik < 80 mmHg; anak < 70 mmHg dengan akral dingin & CRT > 3 detik)"
+          },
+          {
+            title: "Perdarahan spontan",
+            desc: "Mimisan, gusi berdarah, muntah darah, atau melena.",
+            chkLabel: "Malaria Berat (Klinis): Perdarahan spontan (mimisan, gusi berdarah, muntah darah, atau melena)"
+          },
+          {
+            title: "Ikterus klinis",
+            desc: "Kulit dan sklera tampak kuning disertai disfungsi organ vital.",
+            chkLabel: "Malaria Berat (Klinis): Ikterus klinis (kulit & sklera kuning disertai disfungsi organ vital)"
+          }
+        ];
+
+        const malSevereLabItems = [
+          {
+            title: "Anemia berat",
+            desc: "Hemoglobin (Hb) &lt; 7 g/dL atau hematokrit &lt; 20% (anak: Hb &lt; 5 g/dL).",
+            chkLabel: "Malaria Berat (Lab): Anemia berat (Hb < 7 g/dL atau Ht < 20%; anak: Hb < 5 g/dL)"
+          },
+          {
+            title: "Hipoglikemia",
+            desc: "Kadar gula darah sewaktu &lt; 40 mg/dL (&lt; 2,2 mmol/L).",
+            chkLabel: "Malaria Berat (Lab): Hipoglikemia (GDS < 40 mg/dL / < 2,2 mmol/L)"
+          },
+          {
+            title: "Asidosis metabolik",
+            desc: "Bikarbonat plasma &lt; 15 mmol/L atau laktat plasma &gt; 5 mmol/L.",
+            chkLabel: "Malaria Berat (Lab): Asidosis metabolik (bikarbonat plasma < 15 mmol/L atau laktat plasma > 5 mmol/L)"
+          },
+          {
+            title: "Gangguan ginjal akut",
+            desc: "Kreatinin serum &gt; 3 mg/dL atau volume urine &lt; 400 mL/24 jam.",
+            chkLabel: "Malaria Berat (Lab): Gangguan ginjal akut (kreatinin serum > 3 mg/dL atau volume urin < 400 mL/24 jam)"
+          },
+          {
+            title: "Hiperbilirubinemia",
+            desc: "Bilirubin total &gt; 3 mg/dL disertai kepadatan parasit tinggi.",
+            chkLabel: "Malaria Berat (Lab): Hiperbilirubinemia (bilirubin total > 3 mg/dL + kepadatan parasit tinggi)"
+          },
+          {
+            title: "Hiperparasitemia",
+            desc: "Kepadatan parasit &gt; 10% pada <em>P. falciparum</em> (atau &gt; 100.000/&mu;L disertai ikterus/anemia).",
+            chkLabel: "Malaria Berat (Lab): Hiperparasitemia (kepadatan parasit > 10% pada P. falciparum atau > 100.000/uL disertai ikterus/anemia)"
+          },
+          {
+            title: "Hemoglobinuria",
+            desc: "Urine berwarna merah tua atau hitam (<em>blackwater fever</em>).",
+            chkLabel: "Malaria Berat (Lab): Hemoglobinuria (urin berwarna merah tua atau hitam / blackwater fever)"
+          }
+        ];
+
+        return `
+          <div class="calc-box">
+            <h3>Ceklist Penegakan Diagnosis &amp; Kriteria Malaria Berat (Tanda Bahaya)</h3>
+
+            <div class="sub-card">
+              <h4>1. Ceklist Penegakan Diagnosis</h4>
+              <div class="viral-criteria-list">
+                ${malDiagItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="malDiagChk_${i}">
+                      <input type="checkbox" id="malDiagChk_${i}" class="mal-diag-chk ${i === 3 ? "mal-lab-mandatory" : ""}" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateMalariaCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="malariaDiagResult" class="score-pill alert-warn">Ceklist Penegakan Diagnosis: 0/4 item tercentang (Konfirmasi laboratorium mikroskopis/RDT wajib)</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Ceklist Kriteria Malaria Berat (Tanda Bahaya)</h4>
+              <p style="margin:0 0 8px; font-size:0.84rem; color:var(--muted);">
+                Pasien positif malaria (<em>P. falciparum</em>, <em>P. vivax</em>, atau <em>P. knowlesi</em>) dikategorikan <strong>malaria berat</strong> jika memiliki minimal <strong>satu</strong> dari kriteria berikut:
+              </p>
+
+              <div style="font-size:0.84rem; font-weight:700; color:#0f172a; margin-top:6px;">Kriteria klinis</div>
+              <div class="viral-criteria-list">
+                ${malSevereClinicalItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="malSevClinChk_${i}">
+                      <input type="checkbox" id="malSevClinChk_${i}" class="mal-sev-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateMalariaCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+
+              <div style="font-size:0.84rem; font-weight:700; color:#0f172a; margin-top:10px;">Kriteria laboratorium</div>
+              <div class="viral-criteria-list">
+                ${malSevereLabItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="malSevLabChk_${i}">
+                      <input type="checkbox" id="malSevLabChk_${i}" class="mal-sev-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateMalariaCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+
+              <div id="malariaSevereResult" class="score-pill alert-ok">Kriteria Malaria Berat: 0/14 tanda bahaya tercentang (Tidak ada tanda bahaya terpilih)</div>
+            </div>
+
+            ${renderIcd10Section(diag, "3. Koding ICD-10 Malaria")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "viral_inf") {
+        const viralCriteriaItems = [
+          {
+            title: "Gejala Sistemik Umum (Prodromal)",
+            desc: "Demam akut (biasanya < 7 hari), kelelahan (<em>malaise</em>), nyeri otot (<em>myalgia</em>), nyeri sendi (<em>arthralgia</em>), atau sakit kepala.",
+            chkLabel: "Viral infection, unspecified: Gejala Sistemik Umum (Prodromal) — Demam akut (< 7 hari), malaise, myalgia, arthralgia, atau sakit kepala"
+          },
+          {
+            title: "Tidak Ada Lokalisasi Organ Dominan",
+            desc: "Gejala tidak mengarah kuat ke satu sistem organ tertentu (misalnya tidak dominan batuk/pilek berat seperti ISPA atau diare masif seperti gastroenteritis).",
+            chkLabel: "Viral infection, unspecified: Tidak Ada Lokalisasi Organ Dominan — Tidak mengarah kuat ke satu sistem organ tertentu (bukan ISPA/gastroenteritis dominan)"
+          },
+          {
+            title: "Hasil Lab Darah Mendukung Virus (Opsional/Jika Diperiksa)",
+            desc: "Jumlah leukosit normal atau cenderung menurun (<em>leukopenia</em>), atau terdapat peningkatan limfosit relatif (<em>limfositosis</em>), tanpa tanda infeksi bakteri akut (<em>neutrofilia</em> berat).",
+            chkLabel: "Viral infection, unspecified: Hasil Lab Darah Mendukung Virus (Opsional/Jika Diperiksa) — Leukosit normal/leukopenia atau limfositosis relatif tanpa neutrofilia berat"
+          },
+          {
+            title: "Hasil Tes Spesifik Negatif / Belum Tersedia",
+            desc: "Pemeriksaan cepat (<em>rapid test</em>/PCR/serologi) untuk virus spesifik (seperti Dengue, Influenza, atau COVID-19) menunjukkan hasil negatif, belum dilakukan, atau masih menunggu hasil.",
+            chkLabel: "Viral infection, unspecified: Hasil Tes Spesifik Negatif / Belum Tersedia — Rapid test/PCR/serologi virus spesifik (Dengue/Influenza/COVID-19) negatif, belum dilakukan, atau menunggu hasil"
+          }
+        ];
+
+        return `
+          <div class="calc-box">
+            <h3>Ceklist Kriteria Klinis &amp; Pemeriksaan — Viral infection, unspecified</h3>
+            <div class="sub-card">
+              <h4>1. Ceklist Kriteria Klinis &amp; Pemeriksaan</h4>
+              <div class="viral-criteria-list">
+                ${viralCriteriaItems
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="viralCritChk_${i}">
+                      <input type="checkbox" id="viralCritChk_${i}" class="viral-crit-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateViralInfCalc()">
+                      <span><strong>${it.title}:</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="viralCriteriaResult" class="score-pill alert-warn">Ceklist Kriteria Viral Infection: 0/4 kriteria tercentang</div>
+            </div>
+            ${renderIcd10Section(diag, "2. Koding ICD-10 Viral infection, unspecified")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "ppok") {
+        const gejalaKronisItems = [
+          "Sesak napas (progresif, memburuk saat aktivitas, menetap)",
+          "Batuk kronis (bisa hilang timbul atau berdahak)",
+          "Produksi dahak kronis"
+        ];
+        const faktorRisikoItems = [
+          "Asap rokok (aktif/pasif)",
+          "Asap pembakaran biomassa/dapur",
+          "Debu atau bahan kimia di tempat kerja",
+          "Polusi udara",
+          "Faktor genetik (seperti defisiensi alfa-1 antitripsin)"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosis &amp; Klasifikasi Derajat Keparahan PPOK (GOLD)</h3>
+
+            <div class="sub-card">
+              <h4>1. Kriteria Diagnostik Utama PPOK</h4>
+              <label class="check-label" style="margin-bottom:8px;">
+                <input type="checkbox" id="ppokSpirometryChk" data-chk-label="PPOK Spirometri (Wajib): Rasio FEV1/FVC pasca-bronkodilator < 0,70 (atau < 70%) dengan hambatan aliran udara menetap" onchange="updatePpokCalc()">
+                <span><strong>Spirometri (Wajib):</strong> Rasio <strong>FEV1/FVC pasca-bronkodilator &lt; 0,70</strong> (atau &lt; 70%) menunjukkan hambatan aliran udara menetap</span>
+              </label>
+
+              <label class="ppok-xray-strip" for="ppokThoraxInfiltrateChk">
+                <input type="checkbox" id="ppokThoraxInfiltrateChk" class="ppok-xray-chk" data-chk-label="Foto Toraks: Infiltrat baru atau progresif pada foto toraks" onchange="updatePpokCalc()">
+                <span><strong>Foto Toraks:</strong> Infiltrat baru atau progresif pada foto toraks</span>
+              </label>
+
+              <div style="font-size:0.82rem; font-weight:700; color:var(--muted); margin-top:6px;">Gejala pernapasan kronis:</div>
+              <div class="check-grid">
+                ${gejalaKronisItems
+                  .map(
+                    (g) =>
+                      `<label class="check-label"><input type="checkbox" class="ppok-gejala-chk" data-chk-label="PPOK Gejala Kronis: ${g.replace(/"/g, "&quot;")}" onchange="updatePpokCalc()"> ${g}</label>`
+                  )
+                  .join("")}
+              </div>
+
+              <div style="font-size:0.82rem; font-weight:700; color:var(--muted); margin-top:6px;">Faktor risiko:</div>
+              <div class="check-grid">
+                ${faktorRisikoItems
+                  .map(
+                    (f) =>
+                      `<label class="check-label"><input type="checkbox" class="ppok-risk-chk" data-chk-label="PPOK Faktor Risiko: ${f.replace(/"/g, "&quot;")}" onchange="updatePpokCalc()"> ${f}</label>`
+                  )
+                  .join("")}
+              </div>
+
+              <div id="ppokCriteriaResult" class="score-pill alert-warn">Kriteria Diagnostik PPOK: Menunggu Spirometri FEV1/FVC &lt; 0,70, gejala kronis &amp; faktor risiko</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Klasifikasi Derajat Keparahan (Spirometri GOLD — Nilai FEV1 % Prediksi)</h4>
+              <label for="ppokGoldSelect" style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:4px;">Pilih Derajat GOLD (pada pasien dengan rasio FEV1/FVC &lt; 0,70):</label>
+              <select id="ppokGoldSelect" data-select-label="Klasifikasi GOLD PPOK" onchange="updatePpokGoldCalc()" style="width:100%; margin-bottom:6px;">
+                <option value="GOLD 1">GOLD 1 (Ringan): FEV1 &ge; 80%</option>
+                <option value="GOLD 2">GOLD 2 (Sedang): FEV1 50–79%</option>
+                <option value="GOLD 3">GOLD 3 (Berat): FEV1 30–49%</option>
+                <option value="GOLD 4">GOLD 4 (Sangat Berat): FEV1 &lt; 30%</option>
+              </select>
+              <div id="ppokGoldResult" class="score-pill alert-ok">Derajat GOLD 1 (Ringan): FEV1 &ge; 80%</div>
+            </div>
+
+            ${renderIcd10Section(diag, "3. Koding ICD-10 PPOK")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "heg") {
+        const hegChecklist = [
+          "Mual & muntah berat persisten pada kehamilan",
+          "Tanda dehidrasi klinis (turgor menurun, mukosa kering, oliguria)",
+          "Ketonuria positif pada urinalisis",
+          "Penurunan berat badan >= 5% dari berat sebelum hamil",
+          "Gangguan elektrolit / metabolik (hipokalemia, hiponatremia, alkalosis metabolik) -> O21.1"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosis HEG &amp; Kalkulator Skor PUQE (24 Jam Terakhir)</h3>
+
+            <div class="sub-card">
+              <h4>1. Kalkulator Skor PUQE (Pregnancy-Unique Quantification of Emesis)</h4>
+              <p style="margin:0 0 8px; font-size:0.84rem; color:var(--muted);">
+                Mengukur durasi mual, frekuensi muntah, dan muntah kering (<em>retching</em>) dalam <strong>24 jam terakhir</strong> — interpretasi: <strong>&le; 6 ringan</strong>, <strong>7–12 sedang</strong>, <strong>13–15 berat</strong>.
+              </p>
+              <div class="puqe-grid">
+                <div class="puqe-field">
+                  <label for="puqeNauseaSelect">1) Durasi mual dalam 24 jam terakhir:</label>
+                  <select id="puqeNauseaSelect" data-select-label="PUQE Durasi Mual" onchange="updatePuqeCalc()">
+                    <option value="1">Tidak sama sekali (1 poin)</option>
+                    <option value="2">&le; 1 jam (2 poin)</option>
+                    <option value="3">2–3 jam (3 poin)</option>
+                    <option value="4">4–6 jam (4 poin)</option>
+                    <option value="5">&gt; 6 jam (5 poin)</option>
+                  </select>
+                </div>
+                <div class="puqe-field">
+                  <label for="puqeVomitSelect">2) Frekuensi muntah dalam 24 jam terakhir:</label>
+                  <select id="puqeVomitSelect" data-select-label="PUQE Frekuensi Muntah" onchange="updatePuqeCalc()">
+                    <option value="1">Tidak ada (1 poin)</option>
+                    <option value="2">1–2 kali (2 poin)</option>
+                    <option value="3">3–4 kali (3 poin)</option>
+                    <option value="4">5–6 kali (4 poin)</option>
+                    <option value="5">&ge; 7 kali (5 poin)</option>
+                  </select>
+                </div>
+                <div class="puqe-field">
+                  <label for="puqeRetchSelect">3) Frekuensi muntah kering (retching) 24 jam terakhir:</label>
+                  <select id="puqeRetchSelect" data-select-label="PUQE Muntah Kering (Retching)" onchange="updatePuqeCalc()">
+                    <option value="1">Tidak ada (1 poin)</option>
+                    <option value="2">1–2 kali (2 poin)</option>
+                    <option value="3">3–4 kali (3 poin)</option>
+                    <option value="4">5–6 kali (4 poin)</option>
+                    <option value="5">&ge; 7 kali (5 poin)</option>
+                  </select>
+                </div>
+              </div>
+              <div id="puqeResult" class="score-pill alert-ok">Skor PUQE: 3 (&le; 6: Ringan) — Tatalaksana suportif / rawat jalan</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Checklist Klinis &amp; Indikasi Rawat Inap HEG</h4>
+              <div class="check-grid">
+                ${hegChecklist
+                  .map(
+                    (item) =>
+                      `<label class="check-label"><input type="checkbox" class="heg-chk" onchange="updateHegChecklistCalc()"> ${item}</label>`
+                  )
+                  .join("")}
+              </div>
+              <div id="hegChecklistResult" class="score-pill alert-warn">Checklist Klinis HEG: 0/5 terverifikasi</div>
+            </div>
+
+            ${renderIcd10Section(diag, "3. Koding ICD-10 Hiperemesis Gravidarum (HEG)")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "pneumonia") {
+        const gejalaItems = [
+          "Batuk bertambah",
+          "Dahak berubah / purulen",
+          "Suhu >38°C atau riwayat demam",
+          "Ronki / suara napas bronkial",
+          "Leukosit >10.000 atau <4.500"
+        ];
+        const curbItems = [
+          "C — Confusion (kesadaran menurun)",
+          "U — Urea / BUN tinggi (> 7 mmol/L)",
+          "R — Respiratory rate >= 30x/menit",
+          "B — Blood pressure (TD sistolik < 90 atau diastolik <= 60 mmHg)",
+          "Usia >= 65 tahun"
+        ];
+        const psiIndications = [
+          "RR >30x/menit",
+          "PaO2/FiO2 <250",
+          "Infiltrat multi-lobus",
+          "TD sistolik <90 mmHg"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosis Pneumonia — KMK No. HK.02.02/MENKES/514/2015</h3>
+
+            <div class="sub-card">
+              <h4>1. Syarat Diagnosis Pneumonia: Foto Toraks + &ge;2 Gejala Klinis / Lab</h4>
+              <label class="check-label" style="margin-bottom:8px;">
+                <input type="checkbox" id="pneuXrayChk" onchange="updatePneumoniaCalc()">
+                <strong>Foto Toraks:</strong> Infiltrat baru atau progresif pada foto toraks
+              </label>
+              <div style="font-size:0.82rem; font-weight:600; color:var(--muted);">Gejala Klinis / Laboratorium (minimal 2):</div>
+              <div class="check-grid">
+                ${gejalaItems
+                  .map((g) => `<label class="check-label"><input type="checkbox" class="pneu-gejala-chk" onchange="updatePneumoniaCalc()"> ${g}</label>`)
+                  .join("")}
+              </div>
+              <div id="pneuCriteriaResult" class="score-pill alert-warn">Syarat Diagnosis: Belum lengkap (butuh Foto Toraks + &ge;2 gejala/lab)</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Kalkulator Skor CURB-65</h4>
+              <div class="check-grid">
+                ${curbItems
+                  .map((c) => `<label class="check-label"><input type="checkbox" class="curb-chk" onchange="updateCurbCalc()"> ${c} (+1)</label>`)
+                  .join("")}
+              </div>
+              <div id="curbResult" class="score-pill alert-ok">Skor CURB-65: 0 -&gt; Rawat Jalan (Skor 0–1: Rawat Jalan | Skor 2: Pertimbangkan Rawat Inap | Skor &ge;3: Rawat Inap | Skor 4–5: Pertimbangkan ICU)</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>3. Evaluasi Skor PSI &amp; Indikasi Rawat Inap</h4>
+              <label style="display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px;">Kategori Skor PSI:</label>
+              <select id="psiCategorySelect" onchange="updatePsiCalc()" style="width:100%; margin-bottom:8px;">
+                <option value="gt70">Skor &gt;70 -&gt; Rawat inap direkomendasikan</option>
+                <option value="lt70">Skor &lt;70 (cek faktor penyerta rawat inap di bawah)</option>
+              </select>
+              <div style="font-size:0.82rem; font-weight:600; color:var(--muted);">Skor &lt;70 namun tetap rawat inap jika:</div>
+              <div class="check-grid">
+                ${psiIndications
+                  .map((p) => `<label class="check-label"><input type="checkbox" class="psi-chk" onchange="updatePsiCalc()"> ${p}</label>`)
+                  .join("")}
+              </div>
+              <div id="psiResult" class="score-pill alert-warn">PSI &gt;70 -&gt; Rawat inap direkomendasikan</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>4. Lama Rawat &amp; Temuan VPK</h4>
+              <div class="check-grid">
+                <label class="check-label"><input type="checkbox" class="pneu-los-chk" onchange="updatePneumoniaCalc()"> Lama rawat minimal &gt;3 hari</label>
+                <label class="check-label"><input type="checkbox" class="pneu-los-chk" onchange="updatePneumoniaCalc()"> Antibiotik IV minimal 72 jam sebelum terapi oral</label>
+                <label class="check-label"><input type="checkbox" class="pneu-los-chk" onchange="updatePneumoniaCalc()"> Catatan klinis &amp; hasil penunjang lengkap</label>
+              </div>
+              <div class="alert alert-danger" style="margin-top:8px;">
+                <strong>Temuan VPK:</strong> Pneumonia dengan LOS &le;3 hari dianggap <strong>terapi tidak adekuat</strong> — klaim berisiko ditolak.
+              </div>
+            </div>
+
+            ${renderIcd10Section(diag, "5. Koding ICD-10 Pneumonia")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "dengue") {
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosis Demam Berdarah Dengue (KMK 9845/2020 &amp; 4636/2021)</h3>
+            <label style="font-size:0.84rem; font-weight:600;">Pilih Derajat Klinis:</label>
+            <select id="dengueGrade" onchange="updateDengueCalc()" style="width:100%; margin:6px 0 10px;">
+              <option value="DD">DD — Demam + >=2 gejala (nyeri kepala, retro-orbital, mialgia, artralgia, ruam); Leukosit <=5.000 | Trombosit <=150.000</option>
+              <option value="DBD I">DBD I — Demam + uji torniket (+) + bukti plasma leakage; Trombosit <=100.000 &amp; Ht naik >=20%</option>
+              <option value="DBD II">DBD II — DBD I + perdarahan spontan; Trombosit <=100.000 &amp; Ht naik >=20%</option>
+              <option value="DBD III">DBD III — DBD I/II + kegagalan sirkulasi; Trombosit <=100.000 &amp; Ht naik >=20%</option>
+              <option value="DBD IV">DBD IV — Syok berat (TD tidak terukur); Trombosit <=100.000 &amp; Ht naik >=20%</option>
+            </select>
+            <div style="font-size:0.84rem; font-weight:600; margin-top:8px;">Bukti Plasma Leakage (*Wajib tercantum dalam resume medis):</div>
+            <div class="check-grid">
+              <label class="check-label"><input type="checkbox" class="dengue-leak" onchange="updateDengueCalc()"> Hematokrit naik >=20% dari nilai awal</label>
+              <label class="check-label"><input type="checkbox" class="dengue-leak" onchange="updateDengueCalc()"> Asites</label>
+              <label class="check-label"><input type="checkbox" class="dengue-leak" onchange="updateDengueCalc()"> Efusi pleura</label>
+              <label class="check-label"><input type="checkbox" class="dengue-leak" onchange="updateDengueCalc()"> Hipoalbumin</label>
+            </div>
+            <div style="font-size:0.84rem; font-weight:600; margin-top:8px;">Evaluasi &amp; Indikasi Rawat Inap:</div>
+            <div class="check-grid">
+              <label class="check-label"><input type="checkbox" class="dengue-eval" onchange="updateDengueCalc()"> Evaluasi trombosit minimal 1x/hari</label>
+              <label class="check-label"><input type="checkbox" class="dengue-eval" onchange="updateDengueCalc()"> Fase kritis hari ke-3 s.d. ke-6</label>
+              <label class="check-label"><input type="checkbox" class="dengue-eval" onchange="updateDengueCalc()"> Kriteria pulang: trombosit mulai naik (hari ke-6)</label>
+              <label class="check-label"><input type="checkbox" class="dengue-eval" onchange="updateDengueCalc()"> Skor vital sign + hari demam tercatat</label>
+            </div>
+            <div id="dengueResult" class="score-pill alert-ok"></div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Dengue / DHF / DSS")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "typhoid") {
+        const nelwanItems = [
+          ["Suhu >= 37,5°C", 2],
+          ["Nyeri kepala", 2],
+          ["Lidah kotor", 2],
+          ["Bradikardi relatif", 2],
+          ["Meteorismus", 2],
+          ["Roseola / ruam", 2],
+          ["Splenomegali", 2],
+          ["Nyeri perut", 2]
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kalkulator Skor Nelwan — Demam Tifoid (*Wajib tertera di resume medis)</h3>
+            <div class="check-grid">
+              ${nelwanItems
+                .map(
+                  ([label, pts]) =>
+                    `<label class="check-label"><input type="checkbox" class="nelwan-chk" data-pts="${pts}" onchange="updateNelwanCalc()"> ${label} (+${pts})</label>`
+                )
+                .join("")}
+            </div>
+            <div id="nelwanResult" class="score-pill alert-warn">Total Skor: 0 — Belum mencapai ambang >= 13</div>
+            <div class="alert alert-warn" style="margin-top:10px;">
+              <strong>Penunjang &amp; Durasi Rawat:</strong> Tubex TF (IgM anti-O9; min. hari ke-5 dewasa / hari ke-6 anak; &gt;=+4 positif lemah), Typhidot (IgM &amp; IgG), Widal (tidak direkomendasikan single; titer O &gt;=1/320 atau naik 4x dalam 5–7 hari), Kultur Salmonella (gold standard). Lama rawat 5–7 hari; evaluasi antibiotik IV lini pertama min. 48–72 jam. <strong>Hari rawat &lt;=3 hari dengan kondisi sehat = terapi tidak adekuat (temuan TKMKB Nov 2025).</strong>
+            </div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Demam Tifoid")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "gea") {
+        const daldiyonoItems = [
+          ["Muntah / diare disertai asidosis/dehidrasi", 1],
+          ["Umur 50–59 tahun", 1],
+          ["Umur >= 60 tahun", 2],
+          ["Tekanan darah sistolik 90–110 mmHg", 1],
+          ["Tekanan darah sistolik < 90 mmHg", 2],
+          ["Nadi > 120x/menit", 1],
+          ["Kesadaran apatis/somnolen/stupor/koma", 1]
+        ];
+        const rawatItems = [
+          "Dehidrasi sedang-berat (Skor Daldiyono >= 3)",
+          "Vomitus persisten",
+          "Diare memberat dalam 48 jam",
+          "Usia lanjut / Geriatri",
+          "Immunocompromised",
+          "Komplikasi diare akut",
+          "Perlu pemeriksaan lab / analisa feses"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kalkulator Skor Daldiyono &amp; Indikasi Rawat Inap GEA</h3>
+            <p style="margin:0 0 8px; font-size:0.84rem;"><strong>Definisi:</strong> BAB cair lebih dari 3 kali dalam 24 jam. <strong>Kode ICD-10:</strong> K52.9 (non-infeksius), A09 (tidak diketahui penyebabnya), A00–A08 (organisme spesifik).</p>
+            <div class="check-grid">
+              ${daldiyonoItems
+                .map(
+                  ([label, pts]) =>
+                    `<label class="check-label"><input type="checkbox" class="dal-chk" data-pts="${pts}" onchange="updateDaldiyonoCalc()"> ${label} (+${pts})</label>`
+                )
+                .join("")}
+            </div>
+            <div id="dalResult" class="score-pill alert-ok">Skor Daldiyono: 0 (&lt;3 tanpa syok -&gt; Cairan peroral)</div>
+            <div style="font-size:0.84rem; font-weight:600; margin-top:10px;">Checklist 7 Indikasi Rawat Inap:</div>
+            <div class="check-grid">
+              ${rawatItems
+                .map((r) => `<label class="check-label"><input type="checkbox"> ${r}</label>`)
+                .join("")}
+            </div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Diare / GEA")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "sepsis") {
+        const sirsItems = [
+          "Suhu > 38°C atau < 36°C",
+          "HR > 90x/menit",
+          "RR > 20x/menit",
+          "Leukosit > 12.000 atau < 4.000"
+        ];
+        const bundleItems = [
+          "Kultur darah",
+          "Antibiotik broad-spectrum < 1 jam",
+          "Resusitasi cairan",
+          "Pantau MAP >= 65 mmHg"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Kriteria Diagnosis Sepsis &amp; Bundle Tatalaksana Segera</h3>
+            <div class="check-grid">
+              ${sirsItems
+                .map((s) => `<label class="check-label"><input type="checkbox" class="sirs-chk" onchange="updateSepsisCalc()"> ${s}</label>`)
+                .join("")}
+            </div>
+            <label class="check-label" style="margin-top:6px;"><input type="checkbox" id="organDysfChk" onchange="updateSepsisCalc()"> Disfungsi organ (Sepsis Berat)</label>
+            <label class="check-label" style="margin-top:6px;"><input type="checkbox" id="refractoryShockChk" onchange="updateSepsisCalc()"> Hipotensi refrakter cairan + disfungsi organ (Syok Septik)</label>
+            <div id="sepsisResult" class="score-pill alert-ok">SIRS terpenuhi: 0/4</div>
+            <div style="font-size:0.84rem; font-weight:600; margin-top:10px;">Bundle Sepsis — Tatalaksana Segera:</div>
+            <div class="check-grid">
+              ${bundleItems.map((b) => `<label class="check-label"><input type="checkbox"> ${b}</label>`).join("")}
+            </div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Sepsis / Sepsis Berat / Syok Septik")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "wound") {
+        return `
+          <div class="slide11-wrap">
+            <span class="slide11-tag">KRITERIA DIAGNOSIS — SLIDE 11</span>
+            <h3 class="slide11-title">Checklist Ulkus DM &amp; Luka Pasca Operasi</h3>
+
+            <div class="slide11-grid">
+              <div class="slide11-card-blue">
+                <div class="slide11-card-head">
+                  <span style="font-size:1.15rem;">🦶</span>
+                  <span>Checklist Ulkus Diabetikum</span>
+                </div>
+
+                <label class="slide11-chk-row">
+                  <input type="checkbox" class="wound-chk" data-chk-label="Ulkus Diabetikum: Nekrotik -> perlu debridement atau amputasi" onchange="updateWoundCalc()">
+                  <span><strong>Nekrotik &rarr; perlu debridement atau amputasi</strong></span>
+                </label>
+
+                <label class="slide11-chk-row">
+                  <input type="checkbox" class="wound-chk" data-chk-label="Ulkus Diabetikum: Luka kronis multidisiplin — evaluasi gangguan vaskuler (ada/tidak jaringan nekrotik)" onchange="updateWoundCalc()">
+                  <span>Luka kronis multidisiplin — evaluasi gangguan vaskuler (ada/tidak jaringan nekrotik)</span>
+                </label>
+
+                <label class="slide11-chk-row">
+                  <input type="checkbox" class="wound-chk" data-chk-label="Ulkus Diabetikum: Tanpa infeksi & nekrotik -> kontrol DPJP maks 1x/bulan" onchange="updateWoundCalc()">
+                  <span>Tanpa infeksi &amp; nekrotik &rarr; kontrol DPJP maks 1&times;/bulan</span>
+                </label>
+
+                <div class="slide11-code-box">
+                  <div class="slide11-code-pill">Koding INA-CBG</div>
+                  <div><strong>DM + ulkus/gangren/angiopati &rarr; E10–E14 karakter ke-4: .5</strong></div>
+                  <div>Tidak dikode terpisah</div>
+                </div>
+              </div>
+
+              <div class="slide11-card-green">
+                <div class="slide11-card-head">
+                  <span style="font-size:1.15rem;">🩹</span>
+                  <span>Checklist Luka Pasca Operasi</span>
+                </div>
+
+                <label class="slide11-strip">
+                  <div class="slide11-strip-top">
+                    <input type="checkbox" class="wound-chk" data-chk-label="Luka Pasca Operasi: Strip 1 — Luka Bersih (Tanpa Infeksi): Kontrol maks 2x — tidak perlu rawat inap lanjutan" onchange="updateWoundCalc()">
+                    <div>
+                      <div class="slide11-strip-head">
+                        <span>Strip 1 — Luka Bersih</span>
+                        <span class="pill-tag pill-blue">Tanpa Infeksi</span>
+                      </div>
+                      <div class="slide11-strip-sub">Kontrol maks 2&times; — tidak perlu rawat inap lanjutan</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="slide11-strip">
+                  <div class="slide11-strip-top">
+                    <input type="checkbox" class="wound-chk" data-chk-label="Luka Pasca Operasi: Strip 2 — Post SC (Seksio Sesarea): 1x kontrol di RS -> lanjut ke FKTP jika tidak ada ILO" onchange="updateWoundCalc()">
+                    <div>
+                      <div class="slide11-strip-head">
+                        <span>Strip 2 — Post SC</span>
+                        <span class="pill-tag pill-teal">Seksio Sesarea</span>
+                      </div>
+                      <div class="slide11-strip-sub">1&times; kontrol di RS &rarr; lanjut ke FKTP jika tidak ada ILO</div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="slide11-strip">
+                  <div class="slide11-strip-top">
+                    <input type="checkbox" class="wound-chk" data-chk-label="Luka Pasca Operasi: Strip 3 — ILO (Infeksi Luka Operasi): DPJP wajib jelaskan kondisi luka di resume medis / surat bukti pelayanan" onchange="updateWoundCalc()">
+                    <div>
+                      <div class="slide11-strip-head">
+                        <span>Strip 3 — ILO (Infeksi Luka Operasi)</span>
+                        <span class="pill-tag pill-amber">ILO</span>
+                      </div>
+                      <div class="slide11-strip-sub">DPJP wajib jelaskan kondisi luka di resume medis / surat bukti pelayanan</div>
+                    </div>
+                  </div>
+                </label>
+
+                <div class="slide11-phases">
+                  <div class="slide11-phases-title">Checklist Fase Penyembuhan Luka</div>
+                  <div class="slide11-phases-flow">
+                    <label class="phase-chip"><input type="checkbox" class="wound-chk" data-chk-label="Fase Penyembuhan: Hemostasis" onchange="updateWoundCalc()"> Hemostasis</label>
+                    <span>&rarr;</span>
+                    <label class="phase-chip"><input type="checkbox" class="wound-chk" data-chk-label="Fase Penyembuhan: Proliferasi" onchange="updateWoundCalc()"> Proliferasi</label>
+                    <span>&rarr;</span>
+                    <label class="phase-chip"><input type="checkbox" class="wound-chk" data-chk-label="Fase Penyembuhan: Remodelling" onchange="updateWoundCalc()"> Remodelling</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slide11-footer">
+              <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+                <input type="checkbox" class="wound-chk" data-chk-label="Faktor penyembuhan terverifikasi: jenis sayatan, status kebersihan luka, usia pasien, nutrisi, dan imunologi" onchange="updateWoundCalc()">
+                <span><strong>Faktor penyembuhan:</strong> jenis sayatan, status kebersihan luka, usia pasien, nutrisi, dan imunologi</span>
+              </label>
+            </div>
+
+            <div id="woundChecklistSummary" class="slide11-summary">Checklist Terverifikasi: 0 / 10 item</div>
+
+            ${renderIcd10Section(diag, "Koding ICD-10 Ulkus DM & Luka Pasca Operasi")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "soft_tissue_tumor") {
+        const adjustedSttClaim = getAdjustedClaim(diag.claim);
+        return `
+          <div class="bpjs-tindakan-wrap">
+            <span class="bpjs-tag">Tindakan Dijamin BPJS • Group INACBG: M-4-21-I</span>
+            <h3 class="bpjs-title">${diag.name} (ICD-10: ${diag.icd10})</h3>
+
+            <div class="bpjs-card-stt">
+              <div class="bpjs-card-title">${diag.name} — ${diag.icd10}</div>
+              <div class="bpjs-sub">Group: M-4-21-I (Rawat Inap Kelas 3 / 3 Hari, Tarif RS Kelas D Pemerintah) — ${formatRp(adjustedSttClaim)}</div>
+
+              <div class="bpjs-sec-label">Indikasi Rawat Inap</div>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="STT Indikasi Rawat Inap: 1. Tumor dalam (deep tumor) — di bawah fascia atau infiltrasi jaringan" onchange="updateSttCalc()">
+                <span>1. Tumor dalam (<em>deep tumor</em>) — di bawah fascia atau infiltrasi jaringan</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="STT Indikasi Rawat Inap: 2. Dimensi >4 cm dan meluas ke struktur vital" onchange="updateSttCalc()">
+                <span>2. Dimensi &gt;4 cm dan meluas ke struktur vital</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="STT Indikasi Rawat Inap: 3. STT dengan kecurigaan keganasan" onchange="updateSttCalc()">
+                <span>3. STT dengan kecurigaan keganasan</span>
+              </label>
+              <div class="bpjs-out-note">Di luar kriteria &rarr; klaim Rawat Jalan</div>
+
+              <div class="bpjs-sec-label">Struktur Vital</div>
+              <div class="bpjs-chip-row">
+                <label class="bpjs-mini-chip">
+                  <input type="checkbox" class="stt-chk" data-chk-label="Struktur Vital: Pembuluh darah utama" onchange="updateSttCalc()">
+                  <span>Pembuluh darah utama</span>
+                </label>
+                <label class="bpjs-mini-chip">
+                  <input type="checkbox" class="stt-chk" data-chk-label="Struktur Vital: Saraf utama" onchange="updateSttCalc()">
+                  <span>Saraf utama</span>
+                </label>
+                <label class="bpjs-mini-chip">
+                  <input type="checkbox" class="stt-chk" data-chk-label="Struktur Vital: Saluran pernapasan" onchange="updateSttCalc()">
+                  <span>Saluran pernapasan</span>
+                </label>
+                <label class="bpjs-mini-chip">
+                  <input type="checkbox" class="stt-chk" data-chk-label="Struktur Vital: Sistem tulang" onchange="updateSttCalc()">
+                  <span>Sistem tulang</span>
+                </label>
+              </div>
+
+              <div class="bpjs-sec-label">Dokumen Kelengkapan</div>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="Dokumen Kelengkapan STT: Hasil Patologi Anatomi (PA)" onchange="updateSttCalc()">
+                <span>Hasil Patologi Anatomi (PA)</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="Dokumen Kelengkapan STT: Laporan Operasi Eksisi Tumor" onchange="updateSttCalc()">
+                <span>Laporan Operasi Eksisi Tumor</span>
+              </label>
+
+              <div class="bpjs-sec-label">Tindakan / Prosedur ICD-9-CM</div>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="ICD-9-CM: 83.39 — Eksisi lesi jaringan lunak lainnya (Eksisi STT dengan narkose umum)" onchange="updateSttCalc()">
+                <span><strong>83.39</strong> — Eksisi lesi jaringan lunak lainnya (<em>Eksisi STT dengan narkose umum</em>)</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="ICD-9-CM: 83.31 — Eksisi lesi selubung tendon (tendon sheath)" onchange="updateSttCalc()">
+                <span><strong>83.31</strong> — Eksisi lesi selubung tendon (<em>tendon sheath</em>)</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="ICD-9-CM: 83.32 — Eksisi lesi otot (muscle)" onchange="updateSttCalc()">
+                <span><strong>83.32</strong> — Eksisi lesi otot (<em>muscle</em>)</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="ICD-9-CM: 83.49 — Eksisi jaringan lunak lainnya" onchange="updateSttCalc()">
+                <span><strong>83.49</strong> — Eksisi jaringan lunak lainnya</span>
+              </label>
+              <label class="bpjs-chk">
+                <input type="checkbox" class="stt-chk" data-chk-label="ICD-9-CM: 83.21 — Biopsi terbuka jaringan lunak" onchange="updateSttCalc()">
+                <span><strong>83.21</strong> — Biopsi terbuka jaringan lunak</span>
+              </label>
+              <div class="bpjs-koding-bar">
+                <span class="bpjs-koding-badge">ICD-10: ${diag.icd10}</span>
+                <span class="bpjs-koding-badge">Eksisi STT dengan narkose umum &rarr; 83.39</span>
+                <span class="bpjs-koding-badge">Total Klaim: ${formatRp(adjustedSttClaim)} (M-4-21-I)</span>
+              </div>
+            </div>
+
+            <div id="sttChecklistSummary" class="slide11-summary">Checklist Terverifikasi: 0 / 14 item</div>
+
+            ${renderIcd10Section(diag, "Koding ICD-10 Soft Tissue Tumor")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "masld") {
+        const masldCriteria = [
+          "Obesitas (BMI >= 30)",
+          "Hipertensi",
+          "Kolesterol total > 200 mg/dL",
+          "Trigliserida > 150 mg/dL",
+          "HDL < 50 mg/dL"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Fatty Liver / MASLD — Regulasi TKMKB April 2026</h3>
+            <label style="font-size:0.84rem; font-weight:600;">Kategori FIB-4 Score:</label>
+            <select id="fib4Select" onchange="updateMasldCalc()" style="width:100%; margin:6px 0 10px;">
+              <option value="low">FIB-4 &lt; 1,3 (Hanya perubahan gaya hidup -&gt; TIDAK diajukan sebagai diagnosis sekunder)</option>
+              <option value="high">FIB-4 &gt;= 1,3 (Perlu tatalaksana khusus: UDCA + metabolik)</option>
+            </select>
+            <div style="font-size:0.84rem; font-weight:600;">Kriteria MASLD (minimal 3 dari 5):</div>
+            <div class="check-grid">
+              ${masldCriteria
+                .map((m) => `<label class="check-label"><input type="checkbox" class="masld-chk" onchange="updateMasldCalc()"> ${m}</label>`)
+                .join("")}
+            </div>
+            <div id="masldResult" class="score-pill alert-warn"></div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Fatty Liver / MASLD")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      if (diag.module === "campak") {
+        const c3Items = [
+          "Cough (Batuk)",
+          "Coryza (Pilek)",
+          "Conjunctivitis (Mata Merah)",
+          "Ruam dari kepala ke bawah"
+        ];
+        return `
+          <div class="calc-box">
+            <h3>Campak (Measles) — Regulasi TKMKB April 2026</h3>
+            <div class="check-grid">
+              ${c3Items.map((c) => `<label class="check-label"><input type="checkbox"> ${c}</label>`).join("")}
+            </div>
+            <p style="margin:8px 0 0; font-size:0.84rem;">
+              <strong>Perawatan:</strong> Ruang isolasi (atau sesama pasien campak jika isolasi penuh — bukan AC sentral). <strong>Tatalaksana:</strong> Simptomatik + Vitamin A. <strong>Koding Campak + Pneumonia (anak):</strong> B05.2† -&gt; J17.1* (<em>dagger-asterisk convention</em>).
+            </p>
+            <div class="alert alert-warn" style="margin-top:10px;">
+              <strong>Klaim mulai Mei 2026:</strong> Wajib lampirkan <strong>Form SARS</strong> (SE Kemenkes No. HK.02.02/C/1838/2026).
+            </div>
+            ${renderIcd10Section(diag, "Koding ICD-10 Campak (Measles)")}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
+      return `
+        <div class="calc-box">
+          <h3>Koding &amp; Verifikasi Kriteria — ${diag.category}</h3>
+          ${renderIcd10Section(diag)}
+          ${renderInacbgsBpjsCriteriaCard(diag)}
+        </div>`;
+    }
+
+    function updateBacterialInfCalc() {
+      const all = document.querySelectorAll(".bac-crit-chk");
+      const checked = document.querySelectorAll(".bac-crit-chk:checked").length;
+      const el = document.getElementById("bacterialCriteriaResult");
+      if (!el || !all.length) return;
+
+      const complete = checked === all.length;
+      el.className = "score-pill " + (complete ? "alert-ok" : checked > 0 ? "alert-warn" : "alert-warn");
+      el.textContent = complete
+        ? `Ceklist Kriteria Bacterial Infection: ${checked}/${all.length} poin TERPENUHI`
+        : `Ceklist Kriteria Bacterial Infection: ${checked}/${all.length} poin tercentang`;
+      captureCurrentFormValues("bacterial_inf");
+    }
+
+    function updateAsmaCalc() {
+      const all = document.querySelectorAll(".asma-crit-chk");
+      const checked = document.querySelectorAll(".asma-crit-chk:checked").length;
+      const el = document.getElementById("asmaCriteriaResult");
+      if (!el || !all.length) return;
+
+      const anamnesisOk = Boolean(document.getElementById("asmaAnamnesisChk")?.checked);
+      const igdOk = Boolean(document.getElementById("asmaOksigenasiChk")?.checked);
+      const penunjangSubCount = [
+        Boolean(document.getElementById("asmaPefChk")?.checked),
+        Boolean(document.getElementById("asmaThoraxChk")?.checked),
+        Boolean(document.getElementById("asmaLabAgdChk")?.checked)
+      ].filter(Boolean).length;
+      const penunjangOk = Boolean(document.getElementById("asmaPenunjangHeadChk")?.checked) || penunjangSubCount >= 1;
+
+      const ready = anamnesisOk && igdOk && penunjangOk;
+      el.className = "score-pill " + (ready ? "alert-ok" : checked > 0 ? "alert-warn" : "alert-warn");
+      el.textContent = ready
+        ? `Kelayakan Rawat Inap Asma: ${checked}/${all.length} poin tercentang — Kriteria utama (Anamnesis/Fisik, Oksigenasi/IGD & Penunjang) TERPENUHI`
+        : `Kelayakan Rawat Inap Asma: ${checked}/${all.length} poin tercentang (Anamnesis/Fisik: ${anamnesisOk ? "Ya" : "Belum"} | Oksigenasi/IGD: ${igdOk ? "Ya" : "Belum"} | Penunjang: ${penunjangOk ? "Ya" : "Belum"})`;
+      captureCurrentFormValues("asma");
+    }
+
+    function updateIskCalc() {
+      const allLower = document.querySelectorAll(".isk-lower-chk");
+      const checkedLower = document.querySelectorAll(".isk-lower-chk:checked").length;
+      const lowerEl = document.getElementById("iskLowerResult");
+
+      if (lowerEl && allLower.length) {
+        lowerEl.className = "score-pill " + (checkedLower >= 1 ? "alert-ok" : "alert-warn");
+        lowerEl.textContent =
+          checkedLower >= 1
+            ? `Gejala ISK Bawah: ${checkedLower}/${allLower.length} item tercentang (Keluhan uretra/kandung kemih teridentifikasi)`
+            : `Gejala ISK Bawah: 0/${allLower.length} item tercentang`;
+      }
+
+      const allUpper = document.querySelectorAll(".isk-upper-chk");
+      const checkedUpper = document.querySelectorAll(".isk-upper-chk:checked").length;
+      const upperEl = document.getElementById("iskUpperResult");
+
+      if (upperEl && allUpper.length) {
+        upperEl.className = "score-pill " + (checkedUpper >= 1 ? "alert-danger" : "alert-ok");
+        upperEl.textContent =
+          checkedUpper >= 1
+            ? `Tanda Bahaya ISK Atas: ${checkedUpper}/${allUpper.length} tanda tercentang — WASPADA INFEKSI GINJAL / PIELONEFRITIS (Segera evaluasi medis)`
+            : `Tanda Bahaya ISK Atas: 0/${allUpper.length} tanda tercentang (Tidak ada tanda bahaya terpilih)`;
+      }
+
+      captureCurrentFormValues("isk");
+    }
+
+    function updateTbParuCalc() {
+      const allDiag = document.querySelectorAll(".tb-diag-chk");
+      const checkedDiag = document.querySelectorAll(".tb-diag-chk:checked").length;
+      const diagEl = document.getElementById("tbDiagResult");
+
+      if (diagEl && allDiag.length) {
+        const hasSymptom =
+          Boolean(document.getElementById("tbDiagChk_0")?.checked) ||
+          Boolean(document.getElementById("tbDiagChk_1")?.checked);
+        const hasSupport =
+          Boolean(document.getElementById("tbDiagChk_4")?.checked) ||
+          Boolean(document.getElementById("tbDiagChk_5")?.checked);
+        const ready = hasSymptom && hasSupport && checkedDiag >= 3;
+        diagEl.className = "score-pill " + (ready ? "alert-ok" : "alert-warn");
+        diagEl.textContent = ready
+          ? `Kriteria Diagnosa TB Paru: ${checkedDiag}/${allDiag.length} kriteria tercentang (Gejala & pemeriksaan penunjang/bakteriologis/radiologis mendukung)`
+          : `Kriteria Diagnosa TB Paru: ${checkedDiag}/${allDiag.length} kriteria tercentang (lengkapi gejala klinis & pemeriksaan bakteriologis/radiologis)`;
+      }
+
+      const osceSelects = [...document.querySelectorAll(".tb-osce-select")];
+      const osceEl = document.getElementById("tbOsceScoreResult");
+      if (osceEl && osceSelects.length) {
+        const maxScore = osceSelects.length * 3;
+        const totalScore = osceSelects.reduce((sum, sel) => sum + (Number(sel.value) || 0), 0);
+        const pct = Math.round((totalScore / maxScore) * 100);
+        let statusText = "Perlu latihan & kelengkapan kompetensi";
+        let cls = "alert-warn";
+        if (pct >= 80) {
+          statusText = "Sangat baik / Lulus OSCE optimal";
+          cls = "alert-ok";
+        } else if (pct >= 60) {
+          statusText = "Memadai — perkuat rincian kompetensi bernilai < 3";
+          cls = "alert-ok";
+        } else if (totalScore === 0) {
+          statusText = "Belum ada skor OSCE terpilih";
+          cls = "alert-warn";
+        } else {
+          statusText = "Di bawah ambang aman — evaluasi anamnesis, pemeriksaan, tatalaksana & edukasi";
+          cls = "alert-danger";
+        }
+        osceEl.className = "score-pill " + cls;
+        osceEl.textContent = `Skor OSCE TB Paru: ${totalScore} / ${maxScore} poin (${pct}%) — ${statusText}`;
+      }
+
+      captureCurrentFormValues("tb_paru");
+    }
+
+    function updateMalariaCalc() {
+      const allDiag = document.querySelectorAll(".mal-diag-chk");
+      const checkedDiag = document.querySelectorAll(".mal-diag-chk:checked").length;
+      const labOk = document.querySelector(".mal-lab-mandatory")?.checked || false;
+      const diagEl = document.getElementById("malariaDiagResult");
+
+      if (diagEl && allDiag.length) {
+        const ready = labOk && checkedDiag >= 2;
+        diagEl.className = "score-pill " + (ready ? "alert-ok" : "alert-warn");
+        diagEl.textContent = ready
+          ? `Ceklist Penegakan Diagnosis: ${checkedDiag}/${allDiag.length} item tercentang (Konfirmasi laboratorium mikroskopis/RDT TERPENUHI)`
+          : `Ceklist Penegakan Diagnosis: ${checkedDiag}/${allDiag.length} item tercentang | Lab Wajib (Mikroskopis/RDT < 24 jam): ${labOk ? "Terpenuhi" : "Belum dicentang"}`;
+      }
+
+      const allSev = document.querySelectorAll(".mal-sev-chk");
+      const checkedSev = document.querySelectorAll(".mal-sev-chk:checked").length;
+      const sevEl = document.getElementById("malariaSevereResult");
+
+      if (sevEl && allSev.length) {
+        const isSevere = checkedSev >= 1;
+        sevEl.className = "score-pill " + (isSevere ? "alert-danger" : "alert-ok");
+        sevEl.textContent = isSevere
+          ? `Kriteria Malaria Berat: ${checkedSev}/${allSev.length} tanda bahaya tercentang — KATEGORI MALARIA BERAT (>= 1 kriteria terpenuhi)`
+          : `Kriteria Malaria Berat: 0/${allSev.length} tanda bahaya tercentang (Tidak ada tanda bahaya terpilih)`;
+      }
+
+      captureCurrentFormValues("malaria");
+    }
+
+    function updateViralInfCalc() {
+      const all = document.querySelectorAll(".viral-crit-chk");
+      const checked = document.querySelectorAll(".viral-crit-chk:checked").length;
+      const el = document.getElementById("viralCriteriaResult");
+      if (!el || !all.length) return;
+
+      const complete = checked === all.length;
+      el.className = "score-pill " + (complete ? "alert-ok" : checked > 0 ? "alert-warn" : "alert-warn");
+      el.textContent = complete
+        ? `Ceklist Kriteria Viral Infection: ${checked}/${all.length} kriteria TERPENUHI`
+        : `Ceklist Kriteria Viral Infection: ${checked}/${all.length} kriteria tercentang`;
+      captureCurrentFormValues("viral_inf");
+    }
+
+    function updatePpokCalc() {
+      const spiroOk = document.getElementById("ppokSpirometryChk")?.checked || false;
+      const xrayOk = document.getElementById("ppokThoraxInfiltrateChk")?.checked || false;
+      const gejalaCount = document.querySelectorAll(".ppok-gejala-chk:checked").length;
+      const riskCount = document.querySelectorAll(".ppok-risk-chk:checked").length;
+      const el = document.getElementById("ppokCriteriaResult");
+      if (!el) return;
+
+      const fullMet = spiroOk && gejalaCount >= 1 && riskCount >= 1;
+      el.className = "score-pill " + (fullMet ? "alert-ok" : spiroOk ? "alert-warn" : "alert-warn");
+      el.textContent = fullMet
+        ? `Kriteria Diagnostik PPOK TERPENUHI (Spirometri FEV1/FVC < 0,70 + ${gejalaCount}/3 gejala kronis + ${riskCount}/5 faktor risiko${xrayOk ? " + Foto Toraks Infiltrat" : ""})`
+        : `Kriteria Diagnostik PPOK: Spirometri FEV1/FVC < 0,70 (${spiroOk ? "Tercentang" : "Belum"}) | Foto Toraks Infiltrat (${xrayOk ? "Tercentang" : "Belum"}) | Gejala kronis: ${gejalaCount}/3 | Faktor risiko: ${riskCount}/5`;
+      captureCurrentFormValues("ppok");
+    }
+
+    function updatePpokGoldCalc() {
+      const gold = document.getElementById("ppokGoldSelect")?.value || "GOLD 1";
+      const el = document.getElementById("ppokGoldResult");
+      if (!el) return;
+
+      const map = {
+        "GOLD 1": { text: "Derajat GOLD 1 (Ringan): FEV1 >= 80%", cls: "alert-ok" },
+        "GOLD 2": { text: "Derajat GOLD 2 (Sedang): FEV1 50–79%", cls: "alert-warn" },
+        "GOLD 3": { text: "Derajat GOLD 3 (Berat): FEV1 30–49%", cls: "alert-danger" },
+        "GOLD 4": { text: "Derajat GOLD 4 (Sangat Berat): FEV1 < 30%", cls: "alert-danger" }
+      };
+      const info = map[gold] || map["GOLD 1"];
+      el.className = "score-pill " + info.cls;
+      el.textContent = info.text;
+      captureCurrentFormValues("ppok");
+    }
+
+    function updatePuqeCalc() {
+      const nausea = Number(document.getElementById("puqeNauseaSelect")?.value || 1);
+      const vomit = Number(document.getElementById("puqeVomitSelect")?.value || 1);
+      const retch = Number(document.getElementById("puqeRetchSelect")?.value || 1);
+      const el = document.getElementById("puqeResult");
+      if (!el) return;
+
+      const total = nausea + vomit + retch;
+      let label = "Ringan (<= 6)";
+      let rec = "Tatalaksana suportif / rawat jalan";
+      let cls = "alert-ok";
+
+      if (total >= 13) {
+        label = "Berat (13–15)";
+        rec = "Indikasi rawat inap, rehidrasi IV, koreksi elektrolit & evaluasi komplikasi";
+        cls = "alert-danger";
+      } else if (total >= 7) {
+        label = "Sedang (7–12)";
+        rec = "Evaluasi ketonuria & status dehidrasi; pertimbangkan observasi/rawat inap";
+        cls = "alert-warn";
+      }
+
+      el.className = "score-pill " + cls;
+      el.textContent = `Skor PUQE: ${total} poin — Kategori: ${label} (${rec})`;
+      captureCurrentFormValues("heg");
+    }
+
+    function updateHegChecklistCalc() {
+      const all = document.querySelectorAll(".heg-chk");
+      const checked = document.querySelectorAll(".heg-chk:checked").length;
+      const el = document.getElementById("hegChecklistResult");
+      if (!el || !all.length) return;
+      el.className = "score-pill " + (checked > 0 ? "alert-ok" : "alert-warn");
+      el.textContent = `Checklist Klinis HEG: ${checked}/${all.length} terverifikasi`;
+      captureCurrentFormValues("heg");
+    }
+
+    function updateWoundCalc() {
+      const all = document.querySelectorAll(".wound-chk");
+      const checked = document.querySelectorAll(".wound-chk:checked").length;
+      const el = document.getElementById("woundChecklistSummary");
+      if (!el) return;
+      el.className = "slide11-summary " + (checked > 0 ? "alert-ok" : "");
+      el.textContent = `Checklist Terverifikasi: ${checked} / ${all.length} item`;
+      captureCurrentFormValues("ulcus_luka_postop");
+    }
+
+    function updateSttCalc() {
+      const all = document.querySelectorAll(".stt-chk");
+      const checked = document.querySelectorAll(".stt-chk:checked").length;
+      const el = document.getElementById("sttChecklistSummary");
+      if (!el) return;
+      el.className = "slide11-summary " + (checked > 0 ? "alert-ok" : "");
+      el.textContent = `Checklist Terverifikasi: ${checked} / ${all.length} item`;
+      captureCurrentFormValues(selectedId);
+    }
+
+    function updatePneumoniaCalc() {
+      const xrayOk = document.getElementById("pneuXrayChk")?.checked || false;
+      const gejalaCount = document.querySelectorAll(".pneu-gejala-chk:checked").length;
+      const losOkCount = document.querySelectorAll(".pneu-los-chk:checked").length;
+      const el = document.getElementById("pneuCriteriaResult");
+      if (!el) return;
+
+      const criteriaMet = xrayOk && gejalaCount >= 2;
+      el.className = "score-pill " + (criteriaMet ? "alert-ok" : "alert-warn");
+      el.textContent = criteriaMet
+        ? `Syarat Diagnosis TERPENUHI (Foto Toraks + ${gejalaCount} gejala/lab) | Kesiapan LOS & Terapi: ${losOkCount}/3`
+        : `Syarat Diagnosis BELUM LENGKAP (Foto Toraks: ${xrayOk ? "Ya" : "Belum"}, Gejala/Lab: ${gejalaCount}/2) | Kesiapan LOS & Terapi: ${losOkCount}/3`;
+      captureCurrentFormValues("pneumonia");
+    }
+
+    function updateCurbCalc() {
+      const score = [...document.querySelectorAll(".curb-chk:checked")].length;
+      const el = document.getElementById("curbResult");
+      if (!el) return;
+      let rec = "Rawat Jalan";
+      let cls = "alert-ok";
+      if (score === 2) { rec = "Pertimbangkan Rawat Inap"; cls = "alert-warn"; }
+      else if (score === 3) { rec = "Rawat Inap"; cls = "alert-warn"; }
+      else if (score >= 4) { rec = "Pertimbangkan ICU"; cls = "alert-danger"; }
+      el.className = "score-pill " + cls;
+      el.textContent = `Skor CURB-65: ${score} -> ${rec} (0–1: Rawat Jalan | 2: Pertimbangkan Rawat Inap | >=3: Rawat Inap | 4–5: Pertimbangkan ICU)`;
+      captureCurrentFormValues("pneumonia");
+    }
+
+    function updatePsiCalc() {
+      const cat = document.getElementById("psiCategorySelect")?.value || "gt70";
+      const extraFlags = [...document.querySelectorAll(".psi-chk:checked")].map((el) => el.parentElement.textContent.trim());
+      const el = document.getElementById("psiResult");
+      if (!el) return;
+
+      if (cat === "gt70") {
+        el.className = "score-pill alert-warn";
+        el.textContent = "Skor PSI >70 -> Rawat inap direkomendasikan";
+      } else if (extraFlags.length > 0) {
+        el.className = "score-pill alert-warn";
+        el.textContent = `Skor PSI <70 namun TETAP RAWAT INAP karena: ${extraFlags.join(", ")}`;
+      } else {
+        el.className = "score-pill alert-ok";
+        el.textContent = "Skor PSI <70 tanpa tanda bahaya rawat inap tambahan";
+      }
+      captureCurrentFormValues("pneumonia");
+    }
+
+    function updateDengueCalc() {
+      const grade = document.getElementById("dengueGrade")?.value || "DD";
+      const leaks = [...document.querySelectorAll(".dengue-leak:checked")].length;
+      const evals = [...document.querySelectorAll(".dengue-eval:checked")].length;
+      const el = document.getElementById("dengueResult");
+      if (!el) return;
+      el.className = "score-pill " + (grade === "DBD III" || grade === "DBD IV" ? "alert-danger" : "alert-ok");
+      el.textContent = `Derajat: ${grade} | Bukti Plasma Leakage terpilih: ${leaks}/4 | Evaluasi/Rawat Inap: ${evals}/4`;
+      captureCurrentFormValues("dengue");
+    }
+
+    function updateNelwanCalc() {
+      const total = [...document.querySelectorAll(".nelwan-chk:checked")].reduce((a, b) => a + Number(b.dataset.pts), 0);
+      const el = document.getElementById("nelwanResult");
+      if (!el) return;
+      const ok = total >= 13;
+      el.className = "score-pill " + (ok ? "alert-ok" : "alert-warn");
+      el.textContent = `Total Skor Nelwan: ${total} — ${ok ? "Mengarah ke Diagnosis Tifoid (>= 13)" : "Belum mencapai ambang >= 13"}`;
+      captureCurrentFormValues("typhoid");
+    }
+
+    function updateDaldiyonoCalc() {
+      const total = [...document.querySelectorAll(".dal-chk:checked")].reduce((a, b) => a + Number(b.dataset.pts), 0);
+      const el = document.getElementById("dalResult");
+      if (!el) return;
+      const iv = total >= 3;
+      el.className = "score-pill " + (iv ? "alert-warn" : "alert-ok");
+      el.textContent = `Skor Daldiyono: ${total} — ${iv ? "Skor >= 3 (Pertimbangkan cairan intravena IV / rawat inap)" : "Skor < 3 tanpa syok (Cairan peroral)"}`;
+      captureCurrentFormValues("gea");
+    }
+
+    function updateSepsisCalc() {
+      const sirs = [...document.querySelectorAll(".sirs-chk:checked")].length;
+      const organ = document.getElementById("organDysfChk")?.checked;
+      const shock = document.getElementById("refractoryShockChk")?.checked;
+      const el = document.getElementById("sepsisResult");
+      if (!el) return;
+      let status = sirs >= 2 ? "Kriteria Sepsis Terpenuhi (Infeksi + >=2 SIRS)" : "SIRS < 2";
+      let cls = sirs >= 2 ? "alert-warn" : "alert-ok";
+      if (shock) { status = "SYOK SEPTIK (Hipotensi refrakter cairan + disfungsi organ)"; cls = "alert-danger"; }
+      else if (organ && sirs >= 2) { status = "SEPSIS BERAT (Sepsis + disfungsi organ)"; cls = "alert-danger"; }
+      el.className = "score-pill " + cls;
+      el.textContent = `SIRS: ${sirs}/4 — ${status}`;
+      captureCurrentFormValues("sepsis");
+    }
+
+    function updateMasldCalc() {
+      const fib4 = document.getElementById("fib4Select")?.value || "low";
+      const count = [...document.querySelectorAll(".masld-chk:checked")].length;
+      const el = document.getElementById("masldResult");
+      if (!el) return;
+      const eligible = fib4 === "high" && count >= 3;
+      el.className = "score-pill " + (eligible ? "alert-ok" : "alert-warn");
+      el.textContent = eligible
+        ? `FIB-4 >= 1,3 + ${count}/5 kriteria MASLD -> Dapat diajukan ke BPJS`
+        : `FIB-4 (${fib4 === "high" ? ">=1,3" : "<1,3"}) + ${count}/5 kriteria MASLD -> ${fib4 === "low" ? "TIDAK diajukan sebagai diagnosis sekunder" : "Lengkapi minimal 3/5 kriteria MASLD"}`;
+      captureCurrentFormValues("masld");
+    }
+
+    function updateRoleFeedback() {
+      const fb = document.getElementById("roleFeedback");
+      if (fb) {
+        fb.textContent = roleFeedbackMsg;
+      }
+    }
+
+    function renderDetail() {
+      const filtered = getFilteredDiagnoses();
+      const panel = document.getElementById("detailPanel");
+
+      if (!filtered.length) {
+        panel.className = "panel";
+        panel.innerHTML = `<div class="alert alert-warn">Tidak ada diagnosis yang cocok dengan filter pencarian/kategori.</div>`;
+        return;
+      }
+
+      const diag = selectedId ? DIAGNOSES.find((d) => d.id === selectedId) : null;
+      if (!diag) {
+        panel.className = "panel";
+        panel.innerHTML = `<div class="alert alert-warn">Silakan pilih <strong>-diagnosa-</strong> atau ketik kata kunci pencarian untuk menampilkan detail kriteria, ICD-10, dan tarif E-Klaim.</div>`;
+        return;
+      }
+      const isExcluded = Boolean(diag.excluded);
+      const adjustedClaim = getAdjustedClaim(diag.claim);
+
+      panel.className = isExcluded ? "panel panel-excluded" : "panel";
+
+      panel.innerHTML = `
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:center;">
+          <div>
+            <span class="badge">${diag.category}</span>
+            <h2 style="margin:6px 0 2px; font-size:1.25rem;">${diag.name}</h2>
+            <div class="excluded-muted" style="font-size:0.88rem; color:${isExcluded ? "#991b1b" : "var(--muted)"};">Kode ICD-10: <strong>${diag.icd10}</strong></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="excluded-muted" style="font-size:0.78rem; color:${isExcluded ? "#991b1b" : "var(--muted)"};">Estimasi Klaim (E-Klaim)</div>
+            <div style="font-size:1.1rem; font-weight:700; color:${isExcluded ? "var(--danger-text)" : "var(--primary)"};">${formatRp(adjustedClaim)}</div>
+          </div>
+        </div>
+
+        ${
+          isExcluded
+            ? `<div class="alert alert-danger">PERINGATAN: ${diag.note}</div>`
+            : `<div class="alert alert-ok">${diag.note}</div>`
+        }
+
+        <div class="excluded-proc-line" style="font-size:0.88rem; margin-top:8px;">
+          <strong>Tindakan / Prosedur / Penunjang:</strong> ${diag.procedures}
+        </div>
+
+        <div class="sub-card" id="tariffAdjustmentCard">
+          <div class="tariff-header-row">
+            <h4 style="margin:0;">Penyesuaian Tarif Dasar E-Klaim (Rp)</h4>
+            <span class="lock-pill ${isTariffUnlocked ? "unlocked" : "locked"}">
+              ${isTariffUnlocked ? "🔓 Terbuka" : "🔒 Terkunci"}
+            </span>
+          </div>
+
+          <div class="tariff-editor-row">
+            <input
+              id="customTariffInput"
+              type="number"
+              min="0"
+              step="100"
+              value="${diag.claim}"
+              style="flex:1 1 180px;"
+              placeholder="Nominal tarif dasar E-Klaim"
+              ${isTariffUnlocked ? "" : "disabled"}
+            />
+            <button
+              id="applyTariffBtn"
+              class="btn-accent"
+              type="button"
+              onclick="applyCustomTariff('${diag.id}')"
+              ${isTariffUnlocked ? "" : "disabled"}
+            >
+              Terapkan Tarif E-Klaim
+            </button>
+          </div>
+
+          <div class="unlock-box">
+            ${
+              isTariffUnlocked
+                ? `<button class="btn-lock" type="button" onclick="lockTariffSection()">Kunci Kembali Bagian Tarif</button>`
+                : `
+                  <input
+                    id="tariffUnlockPassword"
+                    type="password"
+                    placeholder="Masukkan password buka kunci"
+                    style="flex:1 1 220px;"
+                    onkeydown="if(event.key==='Enter'){event.preventDefault();unlockTariffSection();}"
+                  />
+                  <button class="btn-primary" type="button" onclick="unlockTariffSection()">Buka Kunci</button>
+                `
+            }
+          </div>
+          <div id="tariffLockMsg" class="lock-msg"></div>
+        </div>
+
+        <div id="roleFeedback" class="role-feedback"></div>
+
+        ${renderInteractiveModule(diag)}
+
+        <div class="action-bar">
+          <button class="btn-save" type="button" onclick="saveAllData(true)">Simpan Data</button>
+          <button class="btn-download" type="button" onclick="downloadDiagnosisTxt('${diag.id}')">Download (.TXT)</button>
+          <button class="btn-reset-soft" type="button" onclick="resetDiagData('${diag.id}')">Reset Input Diagnosis</button>
+        </div>
+      `;
+
+      restoreFormValues(diag.id);
+
+      document.querySelectorAll("#detailPanel input[type='checkbox']").forEach((chk) => {
+        chk.addEventListener("change", () => saveAllData(false));
+      });
+      document.querySelectorAll("#detailPanel select").forEach((sel) => {
+        sel.addEventListener("change", () => saveAllData(false));
+      });
+
+      updateBacterialInfCalc();
+      updateAsmaCalc();
+      updateIskCalc();
+      updateTbParuCalc();
+      updateMalariaCalc();
+      updateViralInfCalc();
+      updatePpokCalc();
+      updatePpokGoldCalc();
+      updatePuqeCalc();
+      updateHegChecklistCalc();
+      updatePneumoniaCalc();
+      updateCurbCalc();
+      updatePsiCalc();
+      updateDengueCalc();
+      updateNelwanCalc();
+      updateDaldiyonoCalc();
+      updateSepsisCalc();
+      updateMasldCalc();
+      updateWoundCalc();
+      updateSttCalc();
+      updateInacbgsCalc();
+      renderTariffLockMsg();
+      updateRoleFeedback();
+    }
+
+    function selectDiagnosis(id) {
+      captureCurrentFormValues(selectedId);
+      selectedId = id || "";
+      roleFeedbackMsg = "";
+      saveAllData(false);
+      syncDiagnosisSelector();
+      renderDetail();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", () => {
+      syncDiagnosisSelector();
+      renderDetail();
+    });
+
+    document.getElementById("categoryFilter").addEventListener("change", () => {
+      syncDiagnosisSelector();
+      renderDetail();
+    });
+
+    document.getElementById("diagQuickSelect").addEventListener("change", (e) => {
+      selectDiagnosis(e.target.value);
+    });
+
+    document.getElementById("eclaimClassSelect").addEventListener("change", () => {
+      saveAllData(false);
+      syncDiagnosisSelector();
+      renderDetail();
+    });
+
+    document.getElementById("resetFilterBtn").addEventListener("click", () => {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("categoryFilter").value = "ALL";
+      document.getElementById("eclaimClassSelect").value = "";
+      selectedId = "";
+      savedState.selectedId = "";
+      savedState.tariffMultiplier = "";
+      saveAllData(false);
+      syncDiagnosisSelector();
+      renderDetail();
+    });
+
+    applySavedOverridesToDiagnoses();
+    const classSel = document.getElementById("eclaimClassSelect");
+    if (savedState.tariffMultiplier && [...classSel.options].some((o) => o.value === savedState.tariffMultiplier)) {
+      classSel.value = savedState.tariffMultiplier;
+    } else {
+      classSel.value = "";
+    }
+    selectedId = DIAGNOSES.some((d) => d.id === savedState.selectedId) ? savedState.selectedId : "";
+    syncDiagnosisSelector();
+    renderDetail();
+  </script>
+</body>
+</html>
