@@ -1123,7 +1123,7 @@
 
   <div class="container">
     <div class="toolbar">
-      <input id="searchInput" class="search-input" type="text" placeholder="Cari diagnosis, kode ICD-10 (J18.9, A01.0, J44.9...), atau tindakan ICD-9 (83.39, 90.59)..." />
+      <input id="searchInput" class="search-input" type="text" placeholder="Cari diagnosis, kode ICD-10 (J18.9, A01.0, J44.9, O06.4...), atau tindakan ICD-9 (83.39, 90.59, 88.78, 69.02)..." />
       <select id="categoryFilter">
         <option value="ALL">Semua Kategori</option>
         <option value="Infeksi & Tropis">Infeksi &amp; Tropis</option>
@@ -1164,6 +1164,169 @@
     let showHeaderUnlockPrompt = false;
     let headerLockMsgText = "";
     let headerLockIsError = false;
+
+    const ABORTUS_CHECKLIST_CONFIG = {
+      abortus_inkomplit: {
+        shortName: "Abortus Inkomplit (O06.4)",
+        criteria: [
+          {
+            title: "Usia kehamilan & berat janin",
+            desc: "Usia kehamilan belum mencapai 20 minggu atau berat janin &lt; 500 gram.",
+            chkLabel: "Abortus Inkomplit — Kriteria: Usia kehamilan belum mencapai 20 minggu atau berat janin < 500 gram"
+          },
+          {
+            title: "Pemeriksaan vagina / kanalis servikalis & jaringan",
+            desc: "Pada pemeriksaan vagina, kanalis servikalis terbuka dan jaringan dapat diraba dalam kavum uteri atau terkadang sudah menonjol dari ostium uteri eksternum.",
+            chkLabel: "Abortus Inkomplit — Kriteria: Pada pemeriksaan vagina, kanalis servikalis terbuka dan jaringan dapat diraba dalam kavum uteri atau terkadang sudah menonjol dari ostium uteri eksternum"
+          }
+        ],
+        actions: [
+          {
+            title: "Hasil lab kehamilan positif",
+            desc: "Tercatat hasil pemeriksaan laboratorium tes kehamilan positif.",
+            chkLabel: "Abortus Inkomplit — Tindakan: Hasil lab kehamilan positif"
+          },
+          {
+            title: "USG kandungan (Diagnostic ultrasound of gravid uterus, 88.78)",
+            desc: "Pemeriksaan ultrasonografi kehamilan / uterus gravidus (ICD-9-CM: 88.78).",
+            chkLabel: "Abortus Inkomplit — Tindakan: USG kandungan Diagnostic ultrasound of gravid uterus (88.78)"
+          },
+          {
+            title: "Dilation and curettage following delivery or abortion (69.02)",
+            desc: "Tindakan dilatasi dan kuretase pasca-abortus / persalinan (ICD-9-CM: 69.02).",
+            chkLabel: "Abortus Inkomplit — Tindakan: Dilation and curettage following delivery or abortion (69.02)"
+          }
+        ]
+      },
+      abortus_imminens: {
+        shortName: "Abortus Imminens (O20.9)",
+        criteria: [
+          {
+            title: "Usia kehamilan & berat janin",
+            desc: "Usia kehamilan belum mencapai 20 minggu atau berat janin &lt; 500 gram.",
+            chkLabel: "Abortus Imminens — Kriteria: Usia kehamilan belum mencapai 20 minggu atau berat janin < 500 gram"
+          },
+          {
+            title: "Perdarahan uterus awal tanpa dilatasi serviks",
+            desc: "Perdarahan dari uterus pada kehamilan sebelum 20 minggu, hasil konsepsi masih dalam uterus, dan tanpa adanya dilatasi serviks.",
+            chkLabel: "Abortus Imminens — Kriteria: Perdarahan dari uterus pada kehamilan sebelum 20 minggu, hasil konsepsi masih dalam uterus, dan tanpa adanya dilatasi serviks"
+          },
+          {
+            title: "Nyeri abdomen, ukuran uterus, serviks & tes kehamilan",
+            desc: "Sedikit nyeri abdomen atau tidak sama sekali, uterus membesar sesuai usia kehamilan, serviks belum membuka, dan tes kehamilan positif.",
+            chkLabel: "Abortus Imminens — Kriteria: Sedikit nyeri abdomen atau tidak sama sekali, uterus membesar sesuai usia kehamilan, serviks belum membuka, dan tes kehamilan positif"
+          }
+        ],
+        actions: [
+          {
+            title: "Hasil lab kehamilan positif",
+            desc: "Tercatat hasil pemeriksaan laboratorium tes kehamilan positif.",
+            chkLabel: "Abortus Imminens — Tindakan: Hasil lab kehamilan positif"
+          },
+          {
+            title: "USG kandungan (Diagnostic ultrasound of gravid uterus, 88.78)",
+            desc: "Pemeriksaan ultrasonografi kehamilan / uterus gravidus (ICD-9-CM: 88.78).",
+            chkLabel: "Abortus Imminens — Tindakan: USG kandungan Diagnostic ultrasound of gravid uterus (88.78)"
+          }
+        ]
+      },
+      abortus_insipiens: {
+        shortName: "Abortus Insipiens (O20.8)",
+        criteria: [
+          {
+            title: "Usia kehamilan & berat janin",
+            desc: "Usia kehamilan belum mencapai 20 minggu atau berat janin &lt; 500 gram.",
+            chkLabel: "Abortus Insipiens — Kriteria: Usia kehamilan belum mencapai 20 minggu atau berat janin < 500 gram"
+          },
+          {
+            title: "Perdarahan uterus & dilatasi serviks bertambah",
+            desc: "Perdarahan uterus pada kehamilan sebelum 20 minggu dengan adanya dilatasi serviks uteri yang semakin bertambah, tetapi hasil konsepsi masih dalam uterus.",
+            chkLabel: "Abortus Insipiens — Kriteria: Perdarahan uterus pada kehamilan sebelum 20 minggu dengan adanya dilatasi serviks uteri yang semakin bertambah, tetapi hasil konsepsi masih dalam uterus"
+          },
+          {
+            title: "Mulas & perdarahan makin kuat/banyak",
+            desc: "Rasa perut mulas menjadi lebih sering dan kuat serta perdarahan semakin banyak.",
+            chkLabel: "Abortus Insipiens — Kriteria: Rasa perut mulas menjadi lebih sering dan kuat serta perdarahan semakin banyak"
+          }
+        ],
+        actions: [
+          {
+            title: "Hasil lab kehamilan positif",
+            desc: "Tercatat hasil pemeriksaan laboratorium tes kehamilan positif.",
+            chkLabel: "Abortus Insipiens — Tindakan: Hasil lab kehamilan positif"
+          },
+          {
+            title: "USG kandungan (Diagnostic ultrasound of gravid uterus, 88.78)",
+            desc: "Pemeriksaan ultrasonografi kehamilan / uterus gravidus (ICD-9-CM: 88.78).",
+            chkLabel: "Abortus Insipiens — Tindakan: USG kandungan Diagnostic ultrasound of gravid uterus (88.78)"
+          }
+        ]
+      },
+      abortus_komplit: {
+        shortName: "Abortus Komplit (O03)",
+        criteria: [
+          {
+            title: "Usia kehamilan & berat janin",
+            desc: "Usia kehamilan belum mencapai 20 minggu atau berat janin &lt; 500 gram.",
+            chkLabel: "Abortus Komplit — Kriteria: Usia kehamilan belum mencapai 20 minggu atau berat janin < 500 gram"
+          },
+          {
+            title: "Seluruh konsepsi keluar dari kavum uteri",
+            desc: "Perdarahan pada kehamilan muda di mana seluruh konsepsi telah keluar dari kavum uteri; seluruh hasil kehamilan telah dilahirkan dengan lengkap.",
+            chkLabel: "Abortus Komplit — Kriteria: Perdarahan pada kehamilan muda di mana seluruh konsepsi telah keluar dari kavum uteri; seluruh hasil kehamilan telah dilahirkan dengan lengkap"
+          },
+          {
+            title: "Perdarahan sedikit, ostium uteri menutup & uterus mengecil",
+            desc: "Pada penderita ditemukan perdarahan sedikit, ostium uteri telah menutup, dan uterus sudah banyak mengecil.",
+            chkLabel: "Abortus Komplit — Kriteria: Pada penderita ditemukan perdarahan sedikit, ostium uteri telah menutup, dan uterus sudah banyak mengecil"
+          }
+        ],
+        actions: [
+          {
+            title: "Hasil lab kehamilan positif",
+            desc: "Tercatat hasil pemeriksaan laboratorium tes kehamilan positif.",
+            chkLabel: "Abortus Komplit — Tindakan: Hasil lab kehamilan positif"
+          },
+          {
+            title: "USG kandungan (Diagnostic ultrasound of gravid uterus, 88.78)",
+            desc: "Pemeriksaan ultrasonografi kehamilan / uterus gravidus (ICD-9-CM: 88.78).",
+            chkLabel: "Abortus Komplit — Tindakan: USG kandungan Diagnostic ultrasound of gravid uterus (88.78)"
+          }
+        ]
+      },
+      missed_abortion: {
+        shortName: "Missed Abortion (O02.1)",
+        criteria: [
+          {
+            title: "Kematian janin < 20 minggu tertahan >= 8 minggu",
+            desc: "Kematian janin sebelum berusia 20 minggu, tetapi janin yang mati tertahan di dalam kavum uteri tidak dikeluarkan selama 8 minggu atau lebih.",
+            chkLabel: "Missed Abortion — Kriteria: Kematian janin sebelum berusia 20 minggu, tetapi janin yang mati tertahan di dalam kavum uteri tidak dikeluarkan selama 8 minggu atau lebih"
+          },
+          {
+            title: "Riwayat keguguran iminens & gejala kehamilan menghilang",
+            desc: "Umumnya didahului tanda-tanda keguguran iminens yang kemudian menghilang secara spontan atau setelah pengobatan; gejala subjektif kehamilan menghilang, uterus tidak membesar lagi dan cenderung mengecil, serta tes kehamilan menjadi negatif.",
+            chkLabel: "Missed Abortion — Kriteria: Umumnya didahului tanda-tanda keguguran iminens yang menghilang spontan atau setelah pengobatan; gejala subjektif kehamilan menghilang, uterus tidak membesar lagi/cenderung mengecil, tes kehamilan menjadi negatif"
+          },
+          {
+            title: "Konfirmasi ultrasonografi (USG)",
+            desc: "Dengan ultrasonografi dapat ditentukan segera apakah janin sudah mati dan besarnya sesuai dengan usia kehamilan.",
+            chkLabel: "Missed Abortion — Kriteria: Dengan ultrasonografi dapat ditentukan segera apakah janin sudah mati dan besarnya sesuai dengan usia kehamilan"
+          }
+        ],
+        actions: [
+          {
+            title: "Hasil lab kehamilan positif",
+            desc: "Tercatat hasil pemeriksaan laboratorium tes kehamilan positif.",
+            chkLabel: "Missed Abortion — Tindakan: Hasil lab kehamilan positif"
+          },
+          {
+            title: "USG kandungan (Diagnostic ultrasound of gravid uterus, 88.78)",
+            desc: "Pemeriksaan ultrasonografi kehamilan / uterus gravidus (ICD-9-CM: 88.78).",
+            chkLabel: "Missed Abortion — Tindakan: USG kandungan Diagnostic ultrasound of gravid uterus (88.78)"
+          }
+        ]
+      }
+    };
 
     const ECLAIM_TARIFF_MAP = {
       bacterial_inf: 2202700,
@@ -1220,7 +1383,7 @@
       ulcus_luka_postop: 2007700,
       abortus_inkomplit: 2206700,
       abortus_imminens: 2055500,
-      abortus_insipiens: 0,
+      abortus_insipiens: 2055500,
       abortus_komplit: 1311600,
       missed_abortion: 1311600,
       peb_severe: 2674400,
@@ -1460,8 +1623,8 @@
         { code: "O20.9", label: "Haemorrhage in early pregnancy, unspecified" }
       ],
       abortus_insipiens: [
-        { code: "O06.4", label: "Incomplete / threatened termination <20 minggu (sesuai koding)" },
-        { code: "O02.1", label: "Missed abortion (referensi tabel)" }
+        { code: "O20.8", label: "Other haemorrhage in early pregnancy (Abortus insipiens)" },
+        { code: "O06.4", label: "Unspecified abortion, incomplete" }
       ],
       abortus_komplit: [
         { code: "O03", label: "Spontaneous abortion, complete/without complication" }
@@ -1975,48 +2138,53 @@
       },
       {
         id: "abortus_inkomplit",
-        name: "Abortus inkomplit (Unspecified abortion incomplete)",
+        name: "abortus inkomplit (Unspecified abortion incomplete)",
         icd10: "O06.4",
-        procedures: "Dilation and curettage following delivery or abortion (69.02)",
+        procedures: "hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78), Dilation and curettage following delivery or abortion (69.02)",
         claim: ECLAIM_TARIFF_MAP.abortus_inkomplit,
         category: "Obstetri & Luka",
-        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram. Pada pemeriksaan vagina, kanalis servikalis terbuka dan jaringan dapat diraba dalam kavum uteri atau terkadang sudah menonjol dari ostium uteri eksternum. Tindakan: Dilation and curettage following delivery or abortion (69.02)."
+        module: "abortus_checklist",
+        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram. Pada pemeriksaan vagina, kanalis servikalis terbuka dan jaringan dapat diraba dalam kavum uteri atau terkadang sudah menonjol dari ostium uteri eksternum. Tindakan: hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78), Dilation and curettage following delivery or abortion (69.02)."
       },
       {
         id: "abortus_imminens",
-        name: "Abortus imminens (Haemorrhage in early pregnancy, unspecified)",
+        name: "abortus imminens (Haemorrhage in early pregnancy, unspecified)",
         icd10: "O20.9",
-        procedures: "Evaluasi klinis & USG kehamilan awal",
+        procedures: "hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)",
         claim: ECLAIM_TARIFF_MAP.abortus_imminens,
         category: "Obstetri & Luka",
-        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram; perdarahan dari uterus pada kehamilan sebelum 20 minggu, hasil konsepsi masih dalam uterus, dan tanpa adanya dilatasi serviks. Sedikit nyeri abdomen atau tidak sama sekali, uterus membesar sesuai usia kehamilan, serviks belum membuka, dan tes kehamilan positif."
+        module: "abortus_checklist",
+        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram; perdarahan dari uterus pada kehamilan sebelum 20 minggu, hasil konsepsi masih dalam uterus, dan tanpa adanya dilatasi serviks; sedikit nyeri abdomen atau tidak sama sekali, uterus membesar sesuai usia kehamilan, serviks belum membuka, dan tes kehamilan positif. Tindakan: hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)."
       },
       {
         id: "abortus_insipiens",
-        name: "Abortus insipiens",
-        icd10: "-",
-        procedures: "Evaluasi serviks, hasil konsepsi & tatalaksana obstetri",
+        name: "abortus insipiens",
+        icd10: "O20.8",
+        procedures: "hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)",
         claim: ECLAIM_TARIFF_MAP.abortus_insipiens,
         category: "Obstetri & Luka",
-        note: "Perdarahan uterus pada kehamilan sebelum 20 minggu dengan adanya dilatasi serviks uteri yang semakin bertambah, tetapi hasil konsepsi masih dalam uterus. Dalam hal ini rasa perut mulas menjadi lebih sering dan kuat serta perdarahan semakin banyak."
+        module: "abortus_checklist",
+        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram; perdarahan uterus pada kehamilan sebelum 20 minggu dengan adanya dilatasi serviks uteri yang semakin bertambah, tetapi hasil konsepsi masih dalam uterus; rasa perut mulas menjadi lebih sering dan kuat serta perdarahan semakin banyak. Tindakan: hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)."
       },
       {
         id: "abortus_komplit",
-        name: "Abortus komplit (Spontaneous abortion, incomplete without complication)",
+        name: "abortus komplit (Spontaneous abortion, incomplete without complication)",
         icd10: "O03",
-        procedures: "Evaluasi pasca-abortus & USG/pemeriksaan klinis",
+        procedures: "hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)",
         claim: ECLAIM_TARIFF_MAP.abortus_komplit,
         category: "Obstetri & Luka",
-        note: "Perdarahan pada kehamilan muda di mana seluruh hasil konsepsi telah keluar dari kavum uteri. Seluruh hasil kehamilan telah dilahirkan dengan lengkap. Pada penderita ditemukan perdarahan sedikit, ostium uteri telah menutup, dan uterus sudah banyak mengecil."
+        module: "abortus_checklist",
+        note: "Usia kehamilan belum mencapai 20 minggu atau berat janin <500 gram; perdarahan pada kehamilan muda di mana seluruh konsepsi telah keluar dari kavum uteri; seluruh hasil kehamilan telah dilahirkan dengan lengkap; pada penderita ditemukan perdarahan sedikit, ostium uteri telah menutup, dan uterus sudah banyak mengecil. Tindakan: hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)."
       },
       {
         id: "missed_abortion",
-        name: "Missed abortion",
+        name: "missed abortion",
         icd10: "O02.1",
-        procedures: "Ultrasonografi (USG) & tatalaksana evakuasi sesuai indikasi",
+        procedures: "hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)",
         claim: ECLAIM_TARIFF_MAP.missed_abortion,
         category: "Obstetri & Luka",
-        note: "Kematian janin sebelum berusia 20 minggu, tetapi janin yang mati tertahan di dalam kavum uteri tidak dikeluarkan selama 8 minggu atau lebih. Umumnya didahului tanda keguguran iminens yang menghilang secara spontan atau setelah pengobatan; gejala subjektif kehamilan menghilang, uterus tidak membesar lagi/cenderung mengecil, tes kehamilan menjadi negatif, dan dengan USG dapat ditentukan segera apakah janin sudah mati dan besarnya sesuai usia kehamilan."
+        module: "abortus_checklist",
+        note: "Missed abortion adalah kematian janin sebelum berusia 20 minggu, tetapi janin yang mati tertahan di dalam kavum uteri tidak dikeluarkan selama 8 minggu atau lebih; umumnya didahului tanda-tanda keguguran iminens yang kemudian menghilang secara spontan atau setelah pengobatan; gejala subjektif kehamilan menghilang, uterus tidak membesar lagi dan cenderung mengecil, serta tes kehamilan menjadi negatif; dengan ultrasonografi dapat ditentukan segera apakah janin sudah mati dan besarnya sesuai dengan usia kehamilan. Tindakan: hasil lab kehamilan positif, USG kandungan Diagnostic ultrasound of gravid uterus (88.78)."
       },
       {
         id: "peb_severe",
@@ -2534,6 +2702,17 @@
         lines.push("");
       }
 
+      if (diag.module === "abortus_checklist") {
+        const abCritSummary = document.getElementById("abortusCritResult")?.textContent?.trim();
+        const abActSummary = document.getElementById("abortusActResult")?.textContent?.trim();
+        if (abCritSummary || abActSummary) {
+          lines.push("Ringkasan Ceklist Abortus:");
+          if (abCritSummary) lines.push(`- ${abCritSummary}`);
+          if (abActSummary) lines.push(`- ${abActSummary}`);
+          lines.push("");
+        }
+      }
+
       if (diag.id === "peb_severe") {
         const pebMinSummary = document.getElementById("pebMinimalResult")?.textContent?.trim();
         const pebSevSummary = document.getElementById("pebSevereResult")?.textContent?.trim();
@@ -2835,7 +3014,80 @@
       }
     }
 
+    function updateAbortusChecklistCalc() {
+      const allCrit = document.querySelectorAll(".ab-crit-chk");
+      const checkedCrit = document.querySelectorAll(".ab-crit-chk:checked").length;
+      const critEl = document.getElementById("abortusCritResult");
+      if (critEl && allCrit.length) {
+        const critComplete = checkedCrit === allCrit.length;
+        critEl.className = "score-pill " + (critComplete ? "alert-ok" : "alert-warn");
+        critEl.textContent = critComplete
+          ? `Ceklist Kriteria Klinis Abortus: ${checkedCrit}/${allCrit.length} TERPENUHI`
+          : `Ceklist Kriteria Klinis Abortus: ${checkedCrit}/${allCrit.length} item tercentang`;
+      }
+
+      const allAct = document.querySelectorAll(".ab-act-chk");
+      const checkedAct = document.querySelectorAll(".ab-act-chk:checked").length;
+      const actEl = document.getElementById("abortusActResult");
+      if (actEl && allAct.length) {
+        const actComplete = checkedAct === allAct.length;
+        actEl.className = "score-pill " + (actComplete ? "alert-ok" : "alert-warn");
+        actEl.textContent = actComplete
+          ? `Ceklist Tindakan & Penunjang Abortus: ${checkedAct}/${allAct.length} TERPENUHI`
+          : `Ceklist Tindakan & Penunjang Abortus: ${checkedAct}/${allAct.length} item tercentang`;
+      }
+
+      if (selectedId) {
+        captureCurrentFormValues(selectedId);
+      }
+    }
+
     function renderInteractiveModule(diag) {
+      if (diag.module === "abortus_checklist" && ABORTUS_CHECKLIST_CONFIG[diag.id]) {
+        const cfg = ABORTUS_CHECKLIST_CONFIG[diag.id];
+        return `
+          <div class="calc-box">
+            <h3>Ceklist Kriteria Klinis &amp; Tindakan — ${cfg.shortName}</h3>
+
+            <div class="sub-card">
+              <h4>1. Ceklist Kriteria Klinis</h4>
+              <div class="viral-criteria-list">
+                ${cfg.criteria
+                  .map(
+                    (it, i) => `
+                    <label class="viral-chk-card" for="abCritChk_${diag.id}_${i}">
+                      <input type="checkbox" id="abCritChk_${diag.id}_${i}" class="ab-crit-chk" data-chk-label="${it.chkLabel.replace(/"/g, "&quot;")}" onchange="updateAbortusChecklistCalc()">
+                      <span><strong>${it.title}.</strong> ${it.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="abortusCritResult" class="score-pill alert-warn">Ceklist Kriteria Klinis Abortus: 0/${cfg.criteria.length} item tercentang</div>
+            </div>
+
+            <div class="sub-card">
+              <h4>2. Ceklist Tindakan &amp; Penunjang</h4>
+              <div class="viral-criteria-list">
+                ${cfg.actions
+                  .map(
+                    (act, i) => `
+                    <label class="viral-chk-card" for="abActChk_${diag.id}_${i}">
+                      <input type="checkbox" id="abActChk_${diag.id}_${i}" class="ab-act-chk" data-chk-label="${act.chkLabel.replace(/"/g, "&quot;")}" onchange="updateAbortusChecklistCalc()">
+                      <span><strong>${act.title}.</strong> ${act.desc}</span>
+                    </label>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <div id="abortusActResult" class="score-pill alert-warn">Ceklist Tindakan &amp; Penunjang Abortus: 0/${cfg.actions.length} item tercentang</div>
+            </div>
+
+            ${renderIcd10Section(diag, `3. Koding ICD-10 ${cfg.shortName}`)}
+            ${renderInacbgsBpjsCriteriaCard(diag)}
+          </div>`;
+      }
+
       if (diag.module === "peb_severe") {
         const minimalNoProteinItems = [
           {
@@ -4574,6 +4826,7 @@
         sel.addEventListener("change", () => saveAllData(false));
       });
 
+      updateAbortusChecklistCalc();
       updatePebSevereCalc();
       updateBacterialInfCalc();
       updateAsmaCalc();
